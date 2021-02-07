@@ -21,14 +21,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const IToolbar = () => {
+const IToolbar = (props) => {
     const matches = useMediaQuery('(min-width: 550px)')
     const classes = useStyles();
     return (
         <div className={classes.root}>
             <AppBar position="static" color="default">
                 <Toolbar>
-                    {matches ? <Logo/> : <MenuIcon/>}
+                    {matches ? <Logo/> : <MenuIcon onClick={props.open}/>}
                     {matches ? <NavigationItems/> : <Logo position="flex-end"/>}
                 </Toolbar>
             </AppBar>

@@ -1,13 +1,14 @@
 import React from 'react';
 import './App.css';
-import IToolbar from "./components/UI/Toolbar/IToolbar";
 import Introduction from "./components/Introduction/Introduction";
+import Layout from "./containers/Layout/Layout";
 
 function App() {
   return (
     <div className="App">
-      <IToolbar/>
-      <Introduction/>
+        <Layout>
+            <Introduction/>
+        </Layout>
     </div>
   );
 }
