@@ -2,11 +2,9 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import AcUnitIcon from '@material-ui/icons/AcUnit';
 
 import NavigationItems from "../../NavigationItems/NavigationItems";
+import Logo from "../../Logo/Logo";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -21,19 +19,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const IToolbar = props => {
-
+const IToolbar = () => {
     const classes = useStyles();
-
     return (
         <div className={classes.root}>
             <AppBar position="static" color="default">
                 <Toolbar>
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                        <AcUnitIcon/>
-                        <Typography>ICreate</Typography>
-                    </IconButton>
-
+                    <Logo/>
                     <NavigationItems/>
                 </Toolbar>
             </AppBar>
