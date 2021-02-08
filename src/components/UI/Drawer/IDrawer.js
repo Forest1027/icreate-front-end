@@ -10,14 +10,16 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import LockIcon from '@material-ui/icons/Lock';
+import {NavLink} from "react-router-dom";
 
 const useStyles = makeStyles({
     list: {
         width: 250,
     },
-    fullList: {
-        width: 'auto',
-    },
+    link: {
+        textDecoration: 'none',
+        color: '#660033'
+    }
 });
 
 const IDrawer = (props) => {
@@ -33,23 +35,23 @@ const IDrawer = (props) => {
                 <List>
                     <ListItem button>
                         <ListItemIcon><DescriptionIcon/></ListItemIcon>
-                        <ListItemText primary="My Articles"/>
+                        <NavLink className={classes.link} to='/articles'><ListItemText primary="My Articles"/></NavLink>
                     </ListItem>
                     <ListItem button>
                         <ListItemIcon><AccountBoxIcon/></ListItemIcon>
-                        <ListItemText primary="My Profile"/>
+                        <NavLink className={classes.link} to='/profile'><ListItemText primary="My Profile"/></NavLink>
                     </ListItem>
                     <ListItem button>
                         <ListItemIcon><VpnKeyIcon/></ListItemIcon>
-                        <ListItemText primary="Login"/>
+                        <NavLink className={classes.link} to='/login'><ListItemText primary="Login"/></NavLink>
                     </ListItem>
                     <ListItem button>
                         <ListItemIcon><LockIcon/></ListItemIcon>
-                        <ListItemText primary="Signup"/>
+                        <NavLink className={classes.link} to='/signup'><ListItemText primary="Signup"/></NavLink>
                     </ListItem>
                     <ListItem button>
                         <ListItemIcon><ExitToAppIcon/></ListItemIcon>
-                        <ListItemText primary="Logout"/>
+                        <NavLink className={classes.link} to='/logout'><ListItemText primary="Logout"/></NavLink>
                     </ListItem>
                 </List>
             </div>
