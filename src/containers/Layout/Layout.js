@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import IToolbar from "../../components/UI/Toolbar/IToolbar";
 import IDrawer from "../../components/UI/Drawer/IDrawer";
+import * as layoutConstants from "../../constants/LayoutConstants";
 
 class Layout extends Component{
     state = {
@@ -8,28 +9,28 @@ class Layout extends Component{
         navItems:{
             "My Articles" : {
                 "isAuth":true,
-                "url":"/articles",
-                "icon":"DescriptionIcon"
+                "url":layoutConstants.MY_ARTICLE_URL,
+                "icon":layoutConstants.MY_ARTICLE_ICON
             },
             "My Profile" : {
                 "isAuth":true,
-                "url":"/profile",
-                "icon":"AccountBoxIcon"
+                "url":layoutConstants.MY_PROFILE_URL,
+                "icon":layoutConstants.MY_PROFILE_ICON
             },
             "Login" : {
                 "isAuth":true,
-                "url":"/login",
-                "icon":"VpnKeyIcon"
+                "url":layoutConstants.LOGIN_URL,
+                "icon":layoutConstants.LOGIN_ICON
             },
             "Signup" : {
                 "isAuth":true,
-                "url":"/signup",
-                "icon":"LockIcon"
+                "url":layoutConstants.SIGNUP_URL,
+                "icon":layoutConstants.SIGNUP_ICON
             },
-            "Logout" : {
+            "Logout": {
                 "isAuth":true,
-                "url":"/logout",
-                "icon":"ExitToAppIcon"
+                "url":layoutConstants.LOGOUT_URL,
+                "icon":layoutConstants.LOGOUT_ICON
             }
         }
     }
@@ -46,7 +47,7 @@ class Layout extends Component{
         return (
             <div>
                 <IToolbar open={this.drawerOpenHandler} navItems={this.state.navItems}/>
-                <IDrawer status={this.state.showDrawer} close={this.drawerCloseHandler}/>
+                <IDrawer status={this.state.showDrawer} close={this.drawerCloseHandler} navItems={this.state.navItems}/>
                 <main>
                     {this.props.children}
                 </main>

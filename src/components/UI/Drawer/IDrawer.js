@@ -11,6 +11,8 @@ import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import LockIcon from '@material-ui/icons/Lock';
 import {NavLink} from "react-router-dom";
+import Aux from '../../../hoc/Auxiliary';
+import * as layoutConstants from "../../../constants/LayoutConstants";
 
 const useStyles = makeStyles({
     list: {
@@ -22,8 +24,37 @@ const useStyles = makeStyles({
     }
 });
 
+const listIcon = (icon) => {
+    switch (icon) {
+        case layoutConstants.MY_ARTICLE_ICON:
+            return (<DescriptionIcon/>);
+        case layoutConstants.MY_PROFILE_ICON:
+            return (<AccountBoxIcon/>);
+        case layoutConstants.LOGIN_ICON:
+            return (<VpnKeyIcon/>);
+        case layoutConstants.SIGNUP_ICON:
+            return (<LockIcon/>);
+        case layoutConstants.LOGOUT_ICON:
+            return (<ExitToAppIcon/>);
+        default:
+            return (<Aux/>);
+    }
+};
+
 const IDrawer = (props) => {
     const classes = useStyles();
+    const navListItems = (
+        <Aux>
+            {
+                Object.keys(props.navItems).map(btnName => (
+                    <ListItem button key={btnName}>
+                        <ListItemIcon>{listIcon(props.navItems[btnName].icon)}</ListItemIcon>
+                        <NavLink className={classes.link} to={props.navItems[btnName].url}><ListItemText primary={btnName}/></NavLink>
+                    </ListItem>
+                ))
+            }
+        </Aux>
+    );
 
     return (
         <Drawer className={classes.drawer} anchor='left' open={props.status} onClose={props.close}>
@@ -33,26 +64,7 @@ const IDrawer = (props) => {
                 onClick={props.close}
             >
                 <List>
-                    <ListItem button>
-                        <ListItemIcon><DescriptionIcon/></ListItemIcon>
-                        <NavLink className={classes.link} to='/articles'><ListItemText primary="My Articles"/></NavLink>
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon><AccountBoxIcon/></ListItemIcon>
-                        <NavLink className={classes.link} to='/profile'><ListItemText primary="My Profile"/></NavLink>
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon><VpnKeyIcon/></ListItemIcon>
-                        <NavLink className={classes.link} to='/login'><ListItemText primary="Login"/></NavLink>
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon><LockIcon/></ListItemIcon>
-                        <NavLink className={classes.link} to='/signup'><ListItemText primary="Signup"/></NavLink>
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon><ExitToAppIcon/></ListItemIcon>
-                        <NavLink className={classes.link} to='/logout'><ListItemText primary="Logout"/></NavLink>
-                    </ListItem>
+                    {navListItems}
                 </List>
             </div>
         </Drawer>
