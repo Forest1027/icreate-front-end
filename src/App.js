@@ -3,7 +3,7 @@ import {Route, Switch} from 'react-router-dom';
 import './App.css';
 import Introduction from "./components/Introduction/Introduction";
 import Layout from "./containers/Layout/Layout";
-import Articles from "./containers/Articles/Articles";
+import ArticleScreen from "./containers/Articles/ArticleScreen";
 
 class App extends Component{
     render() {
@@ -12,7 +12,7 @@ class App extends Component{
                 <Layout>
                     <Switch>
                         <Route path="/" exact component={Introduction}/>
-                        <Route path="/articles" exact component={Articles}/>
+                        <Route path="/articles" exact component={ArticleScreen}/>
                     </Switch>
                 </Layout>
             </div>
