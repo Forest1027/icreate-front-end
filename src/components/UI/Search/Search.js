@@ -1,8 +1,8 @@
 import React from 'react';
-import {fade, makeStyles} from '@material-ui/core/styles';
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
-import Grid from '@material-ui/core/Grid';
+import Grid from "@material-ui/core/Grid";
+import SearchIcon from "@material-ui/icons/Search";
+import InputBase from "@material-ui/core/InputBase";
+import {fade, makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
     search: {
@@ -14,8 +14,7 @@ const useStyles = makeStyles((theme) => ({
         },
         marginTop: theme.spacing(5),
         marginBottom: theme.spacing(5),
-        justifyContent: 'center',
-        margin: 'auto',
+        margin: 'auto'
     },
     searchIcon: {
         padding: theme.spacing(0, 2),
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 const Search = () => {
     const classes = useStyles();
     return (
-        <Grid item className={classes.search} sm={6} xs={8}>
+        <Grid item className={classes.search} sm={6} xs={6}>
             <div className={classes.searchIcon}>
                 <SearchIcon/>
             </div>
@@ -58,7 +57,8 @@ const Search = () => {
                 }}
                 inputProps={{'aria-label': 'search'}}
             />
-        </Grid>);
-};
+        </Grid>
+    )
+}
 
 export default Search;
