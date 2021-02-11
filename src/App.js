@@ -6,6 +6,7 @@ import Layout from "./containers/Layout/Layout";
 import ArticleScreen from "./containers/Articles/ArticleScreen";
 import ArticleDetail from "./components/Article/ArticleDetail/ArticleDetail";
 
+
 class App extends Component{
     render() {
         return (
@@ -15,6 +16,7 @@ class App extends Component{
                         <Route path="/" exact component={Introduction}/>
                         <Route path="/articles" exact component={ArticleScreen}/>
                         <Route path="/articleDetail" exact component={ArticleDetail}/>
+
                     </Switch>
                 </Layout>
             </div>
