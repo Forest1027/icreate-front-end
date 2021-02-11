@@ -5,6 +5,8 @@ import Button from "@material-ui/core/Button";
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import {useMediaQuery} from "@material-ui/core";
+import {NavLink} from "react-router-dom";
+
 
 import Search from "./Search";
 
@@ -26,7 +28,11 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(5),
         backgroundColor: '#660033',
         color: 'white',
-    }
+    },
+    link: {
+        textDecoration: 'none'
+    },
+
 }));
 
 const SearchAddGrid = () => {
@@ -37,9 +43,10 @@ const SearchAddGrid = () => {
             <Search/>
             <Grid item sm={4} xs={3} className={classes.buttonGrid}>
                 {matches? (
-                    <Button variant="contained" className={classes.button}>Create</Button>
+                    <NavLink className={classes.link} to='/articleDetail'><Button variant="contained" className={classes.button}>Create</Button></NavLink>
                 ):(
-                    <IconButton  variant="contained" className={classes.button}><AddIcon/></IconButton>
+                    <NavLink className={classes.link} to='/articleDetail'><IconButton  variant="contained" className={classes.button} ><AddIcon/></IconButton></NavLink>
+
                 )}
 
             </Grid>

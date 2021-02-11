@@ -4,11 +4,11 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import MenuIcon from '@material-ui/icons/Menu';
-
-import Logo from "../../Logo/Logo";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import {NavLink} from "react-router-dom";
+
+import Logo from "../../Logo/Logo";
 
 const useStyles = makeStyles((theme) => ({
     root: {
