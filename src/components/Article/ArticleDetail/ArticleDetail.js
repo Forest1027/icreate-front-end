@@ -24,10 +24,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 const ArticleDetail = () => {
     const classes = useStyles();
-    const handleEditorChange = (content, editor) => {
-        console.log(ClassicEditor.builtinPlugins.map( plugin => plugin.pluginName ));
-    }
-
 
     return (
         <Box justifyContent="center" display="flex" flexWrap='wrap'>
