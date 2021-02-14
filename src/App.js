@@ -4,7 +4,7 @@ import './App.css';
 import Introduction from "./components/Introduction/Introduction";
 import Layout from "./containers/Layout/Layout";
 import ArticleScreen from "./containers/Articles/ArticleScreen";
-import ArticleDetail from "./components/Article/ArticleDetail/ArticleDetail";
+import ArticleDetail from "./containers/Articles/ArticleDetail";
 
 
 class App extends Component{
