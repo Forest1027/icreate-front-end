@@ -1,5 +1,8 @@
 export {
     createArticle,
     fetchArticles,
-    changeArticleContent
+    changeArticleContent,
+    initEditor,
+    enableEdit,
+    disableEdit
 } from './article';

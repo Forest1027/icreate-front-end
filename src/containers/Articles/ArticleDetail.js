@@ -8,6 +8,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import {CKEditor} from "@ckeditor/ckeditor5-react";
 
 import * as actions from '../../store/actions/index';
+import Aux from '../../hoc/Auxiliary';
 
 
 const styles = theme => ({
@@ -47,6 +48,11 @@ const styles = theme => ({
 });
 
 class ArticleDetail extends Component {
+    componentDidMount() {
+        console.log('track')
+        console.log(this.props.readOnly)
+
+    }
 
     createArticleHandler = () => {
         const formData = {};
@@ -62,13 +68,17 @@ class ArticleDetail extends Component {
 
     inputChangeHandler = (event) => {
         console.log('input change 1')
-        console.log(event.target.value)
+        console.log(this.props.readOnly)
         this.props.onInputChange(event.target.name, event.target.value)
     }
 
     editorInputChangeHanndler = (event, editor) => {
         const data = editor.getData();
         this.props.onInputChange('content', data);
+    }
+
+    editHandler = () => {
+        this.props.onEditClicked();
     }
 
     render() {
@@ -78,27 +88,39 @@ class ArticleDetail extends Component {
                 <Box justifyContent="flex-start" width='80%'>
                     <form className={classes.root} noValidate autoComplete="off" onSubmit={this.createArticleHandler}>
                         <Box className={classes.buttonBox}>
-                            <Button className={classes.editButton} variant="contained"
-                                    onClick={this.createArticleHandler}>Create</Button>
-                            <Button className={classes.cancelButton} variant="outlined">Cancel</Button>
+                            {this.props.readOnly ?
+                                <Button className={classes.editButton} variant="contained"
+                                        onClick={this.editHandler}>Edit</Button>
+                                : (
+                                    <Aux>
+                                        <Button className={classes.editButton} variant="contained"
+                                                onClick={this.createArticleHandler}>Create</Button>
+                                        <Button className={classes.cancelButton}
+                                                variant="outlined">Cancel</Button>
+                                    </Aux>)
+                            }
+
                         </Box>
                         <Box className={classes.title}>
                             <TextField id="standard-basic" label="Title" fullWidth name="title"
-                                       onChange={this.inputChangeHandler}/>
+                                       onChange={this.inputChangeHandler} defaultValue={this.props.articleForm.title}
+                                       inputProps={{readOnly: this.props.readOnly}}/>
                         </Box>
                         <Box>
                             <TextField id="standard-basic" label="One line description" fullWidth name="description"
-                                       onChange={this.inputChangeHandler}/>
+                                       onChange={this.inputChangeHandler}
+                                       defaultValue={this.props.articleForm.description}
+                                       inputProps={{readOnly: this.props.readOnly}}/>
                         </Box>
                         <Box className={classes.editor}>
                             <CKEditor
+                                data={this.props.articleForm.content}
                                 editor={ClassicEditor}
                                 config={{
                                     removePlugins: ["ImageUpload"],
                                 }}
                                 onReady={editor => {
-                                    // You can store the "editor" and use when it is needed.
-                                    console.log('Editor is ready to use!', editor);
+                                    this.props.onInitEditor(editor);
                                 }}
                                 onChange={this.editorInputChangeHanndler}
                                 onBlur={(event, editor) => {
@@ -117,14 +139,17 @@ class ArticleDetail extends Component {
 
 const mapStateToProps = state => {
     return {
-        articleForm: state.article.articleForm
+        articleForm: state.article.articleForm,
+        readOnly: state.article.readOnly,
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         onCreateArticle: (articleData) => dispatch(actions.createArticle(articleData)),
-        onInputChange: (name, value) => dispatch(actions.changeArticleContent(name, value))
+        onInputChange: (name, value) => dispatch(actions.changeArticleContent(name, value)),
+        onInitEditor: (editor) => dispatch(actions.initEditor(editor)),
+        onEditClicked: () => dispatch(actions.enableEdit())
     }
 };
 
