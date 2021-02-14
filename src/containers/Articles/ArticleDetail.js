@@ -49,36 +49,25 @@ const styles = theme => ({
 
 class ArticleDetail extends Component {
     componentDidMount() {
-        console.log('track')
-        console.log(this.props.readOnly)
+        console.log(this.props.articleForm.articleId)
 
     }
 
     createArticleHandler = () => {
         const formData = {};
-        console.log('create')
-        console.log(this.props.articleForm)
         for (let formIdentifier in this.props.articleForm) {
             formData[formIdentifier] = this.props.articleForm[formIdentifier];
         }
-
-        console.log(formData)
         this.props.onCreateArticle(formData)
     };
 
     inputChangeHandler = (event) => {
-        console.log('input change 1')
-        console.log(this.props.readOnly)
         this.props.onInputChange(event.target.name, event.target.value)
     }
 
     editorInputChangeHanndler = (event, editor) => {
         const data = editor.getData();
         this.props.onInputChange('content', data);
-    }
-
-    editHandler = () => {
-        this.props.onEditClicked();
     }
 
     render() {
@@ -90,14 +79,20 @@ class ArticleDetail extends Component {
                         <Box className={classes.buttonBox}>
                             {this.props.readOnly ?
                                 <Button className={classes.editButton} variant="contained"
-                                        onClick={this.editHandler}>Edit</Button>
+                                        onClick={this.props.onEditClicked}>Edit</Button>
                                 : (
-                                    <Aux>
-                                        <Button className={classes.editButton} variant="contained"
-                                                onClick={this.createArticleHandler}>Create</Button>
-                                        <Button className={classes.cancelButton}
-                                                variant="outlined">Cancel</Button>
-                                    </Aux>)
+                                    this.props.articleForm.articleId !== '' ?
+                                        (<Aux>
+                                            <Button className={classes.editButton} variant="contained">Update</Button>
+                                            <Button className={classes.cancelButton}
+                                                    variant="outlined" onClick={this.props.onUpdateCancelClicked}>Cancel</Button>
+                                        </Aux>)
+                                        : (<Aux>
+                                            <Button className={classes.editButton} variant="contained"
+                                                    onClick={this.createArticleHandler}>Create</Button>
+                                            <Button className={classes.cancelButton}
+                                                    variant="outlined">Cancel</Button>
+                                        </Aux>))
                             }
 
                         </Box>
@@ -149,7 +144,8 @@ const mapDispatchToProps = dispatch => {
         onCreateArticle: (articleData) => dispatch(actions.createArticle(articleData)),
         onInputChange: (name, value) => dispatch(actions.changeArticleContent(name, value)),
         onInitEditor: (editor) => dispatch(actions.initEditor(editor)),
-        onEditClicked: () => dispatch(actions.enableEdit())
+        onEditClicked: () => dispatch(actions.enableEdit()),
+        onUpdateCancelClicked : () => dispatch(actions.disableEdit())
     }
 };
 

@@ -28,9 +28,10 @@ export const changeArticleContent = (name, value) => {
     }
 }
 
-export const createArticleSuccess = () => {
+export const createArticleSuccess = (name) => {
     return {
         type: actionTypes.CREATE_ARTICLE_SUCCESS,
+        articleId: name
     }
 };
 
@@ -52,7 +53,9 @@ export const createArticle = (articleData) => {
         dispatch(createArticleStart());
         axios.post('/articles.json', articleData)
             .then(response => {
-                dispatch(createArticleSuccess());
+                console.log(response.data)
+                console.log(response.data.name)
+                dispatch(createArticleSuccess(response.data.name));
                 dispatch(disableEdit());
             }).catch(error => {
                 dispatch(createArticleFail(error));

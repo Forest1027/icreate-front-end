@@ -2,6 +2,7 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     articleForm: {
+        articleId:'',
         title: '',
         description: '',
         content: ''
@@ -39,8 +40,11 @@ const reducer = (state = initialState, action) => {
         case actionTypes.CREATE_ARTICLE_START:
             return {...state};
         case actionTypes.CREATE_ARTICLE_SUCCESS:
+            const form = state.articleForm;
+            form.articleId = action.articleId;
             return {
-                ...state
+                ...state,
+                articleForm: form
             };
         case actionTypes.CREATE_ARTICLE_FAIL:
             return {...state};
