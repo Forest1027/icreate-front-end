@@ -4,9 +4,11 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import {connect} from "react-redux";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import {CKEditor} from "@ckeditor/ckeditor5-react";
 
-import Editor from "../../components/Editor/Editor";
 import * as actions from '../../store/actions/index';
+
 
 const styles = theme => ({
     root: {
@@ -59,7 +61,14 @@ class ArticleDetail extends Component {
     };
 
     inputChangeHandler = (event) => {
+        console.log('input change 1')
+        console.log(event.target.value)
         this.props.onInputChange(event.target.name, event.target.value)
+    }
+
+    editorInputChangeHanndler = (event, editor) => {
+        const data = editor.getData();
+        this.props.onInputChange('content', data);
     }
 
     render() {
@@ -82,7 +91,23 @@ class ArticleDetail extends Component {
                                        onChange={this.inputChangeHandler}/>
                         </Box>
                         <Box className={classes.editor}>
-                            <Editor changed={this.inputChangeHandler}/>
+                            <CKEditor
+                                editor={ClassicEditor}
+                                config={{
+                                    removePlugins: ["ImageUpload"],
+                                }}
+                                onReady={editor => {
+                                    // You can store the "editor" and use when it is needed.
+                                    console.log('Editor is ready to use!', editor);
+                                }}
+                                onChange={this.editorInputChangeHanndler}
+                                onBlur={(event, editor) => {
+                                    console.log('Blur.', editor);
+                                }}
+                                onFocus={(event, editor) => {
+                                    console.log('Focus.', editor);
+                                }}
+                            />
                         </Box>
                     </form>
                 </Box>
@@ -92,7 +117,6 @@ class ArticleDetail extends Component {
 
 const mapStateToProps = state => {
     return {
-        redirectPath: state.article.redirectPath,
         articleForm: state.article.articleForm
     }
 };
