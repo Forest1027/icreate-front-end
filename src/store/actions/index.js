@@ -5,5 +5,6 @@ export {
     initEditor,
     enableEdit,
     disableEdit,
-    enterArticle
+    fetchArticle,
+    goToCreateArticle
 } from './article';

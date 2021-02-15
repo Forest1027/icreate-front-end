@@ -30,7 +30,7 @@ const ArticleItems = (props) => {
         <div className={classes.root}>
             <Grid container spacing={3}>
                 {props.articles.map(article => (
-                    <Grid item xs={12} sm={3} key={article.id} onClick={()=>props.onArticleClicked(article.id)}>
+                    <Grid item xs={12} sm={3} key={article.articleId} onClick={()=>props.onArticleClicked(article.articleId)}>
                         <NavLink className={classes.link} to='/articleDetail'>
                             <Paper className={classes.paper} >
                                 <Typography color="textSecondary" gutterBottom>
@@ -50,7 +50,7 @@ const ArticleItems = (props) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onArticleClicked: (id) => dispatch(actions.enterArticle(id))
+        onArticleClicked: (id) => dispatch(actions.fetchArticle(id))
     }
 };
 

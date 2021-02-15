@@ -14,14 +14,16 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.ENTER_ARTICLE:
-            console.log('enter');
-            console.log(action.articleId)
-            const newForm = state.articleForm
-            newForm["articleId"] = action.articleId
+        case actionTypes.CLEAR_ARTICLE:
+            console.log('clear')
             return {
                 ...state,
-                articleForm: newForm
+                articleForm: {
+                    articleId:'',
+                    title: '',
+                    description: '',
+                    content: ''
+                }
             }
         case actionTypes.ENABLE_EDIT:
             console.log('edit')
@@ -70,6 +72,11 @@ const reducer = (state = initialState, action) => {
             }
         case actionTypes.FETCH_ARTICLES_FAIL:
             return {...state};
+        case actionTypes.FETCH_ARTICLE_SUCCESS:
+            return {
+                ...state,
+                articleForm: action.article
+            }
         default:
             return state;
     }
