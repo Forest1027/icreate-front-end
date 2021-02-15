@@ -1,6 +1,13 @@
 import * as actionTypes from './actionTypes';
 import axios from "../../axios-url";
 
+export const enterArticle = (id) => {
+    return {
+        type: actionTypes.ENTER_ARTICLE,
+        articleId: id
+    }
+}
+
 export const enableEdit = () => {
     return {
         type: actionTypes.ENABLE_EDIT
@@ -63,12 +70,18 @@ export const createArticle = (articleData) => {
     }
 }
 
-export const fetchArticlesSuccess = () => {
-
+export const fetchArticlesSuccess = (articles) => {
+    return {
+        type: actionTypes.FETCH_ARTICLES_SUCCESS,
+        articles: articles
+    }
 };
 
-export const fetchArticlesFail = () => {
-
+export const fetchArticlesFail = (error) => {
+    return {
+        type: actionTypes.FETCH_ARTICLES_FAIL,
+        error: error
+    }
 };
 
 export const fetchArticlesStart = () => {
@@ -76,5 +89,22 @@ export const fetchArticlesStart = () => {
 };
 
 export const fetchArticles = () => {
-
+    return dispatch => {
+        axios.get('/articles.json').then(
+            res => {
+                const fetchedArticles = [];
+                for (let key in res.data) {
+                    fetchedArticles.push({
+                        ...res.data[key],
+                        id:key
+                    });
+                }
+                console.log('action')
+                console.log(fetchedArticles)
+                dispatch(fetchArticlesSuccess(fetchedArticles));
+            }
+        ).catch(err => {
+            dispatch(fetchArticlesFail(err));
+        })
+    }
 };

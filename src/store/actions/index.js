@@ -4,5 +4,6 @@ export {
     changeArticleContent,
     initEditor,
     enableEdit,
-    disableEdit
+    disableEdit,
+    enterArticle
 } from './article';

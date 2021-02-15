@@ -49,6 +49,7 @@ const styles = theme => ({
 
 class ArticleDetail extends Component {
     componentDidMount() {
+        console.log('componentdidmount')
         console.log(this.props.articleForm.articleId)
 
     }

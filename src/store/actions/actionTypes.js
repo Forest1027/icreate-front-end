@@ -14,3 +14,5 @@ export const INIT_EDITOR = 'INIT_EDITOR';
 
 export const ENABLE_EDIT= 'ENABLE_EDIT';
 export const DISABLE_EDIT = 'DISABLE_EDIT';
+
+export const ENTER_ARTICLE = 'ENTER_ARTICLE';
