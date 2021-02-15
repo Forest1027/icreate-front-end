@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes';
-import axios from "../../axios-url";
+import {databaseRef} from "../../database";
+
 
 export const enableEdit = () => {
     return {
@@ -51,24 +52,34 @@ export const createArticleStart = () => {
 export const createArticle = (articleData) => {
     return dispatch => {
         dispatch(createArticleStart());
-        axios.post('/articles.json', articleData)
-            .then(response => {
-                console.log(response.data)
-                console.log(response.data.name)
-                dispatch(createArticleSuccess(response.data.name));
-                dispatch(disableEdit());
-            }).catch(error => {
+        let newarticleRef = databaseRef.ref('articles/').push();
+        console.log('push')
+        console.log(newarticleRef.key)
+        newarticleRef.set(articleData, error => {
+            if (error) {
                 dispatch(createArticleFail(error));
+            } else {
+                console.log('res');
+                console.log(newarticleRef)
+                dispatch(createArticleSuccess(newarticleRef.key));
+                dispatch(disableEdit());
+            }
         });
     }
 }
 
-export const fetchArticlesSuccess = () => {
-
+export const fetchArticlesSuccess = (articles) => {
+    return {
+        type: actionTypes.FETCH_ARTICLES_SUCCESS,
+        articles: articles
+    }
 };
 
-export const fetchArticlesFail = () => {
-
+export const fetchArticlesFail = (error) => {
+    return {
+        type: actionTypes.FETCH_ARTICLES_FAIL,
+        error: error
+    }
 };
 
 export const fetchArticlesStart = () => {
@@ -76,5 +87,61 @@ export const fetchArticlesStart = () => {
 };
 
 export const fetchArticles = () => {
+    return dispatch => {
+        const ref = databaseRef.ref('articles');
+        ref.on('value', (snapshot) => {
+            const res = snapshot.val();
+            const fetchedArticles = [];
+            for (let key in res) {
+                fetchedArticles.push({
+                    ...res[key],
+                    articleId: key
+                });
+            }
+            console.log('action')
+            console.log(fetchedArticles)
+            dispatch(fetchArticlesSuccess(fetchedArticles));
+        })
+    }
+};
+
+export const fetchArticleSuccess = (article) => {
+    return {
+        type: actionTypes.FETCH_ARTICLE_SUCCESS,
+        article: article
+    }
+};
+
+export const fetchArticleFail = (error) => {
+    return {
+        type: actionTypes.FETCH_ARTICLE_FAIL,
+        error: error
+    }
+};
+
+export const fetchArticleStart = () => {
 
 };
+
+export const fetchArticle = (articleId) => {
+    return dispatch => {
+        dispatch(enableEdit());
+        databaseRef.ref('articles/' + articleId).on('value', snapshot => {
+            dispatch(fetchArticleSuccess(snapshot.val()));
+        })
+    }
+}
+
+export const goToCreateArticle = () => {
+    return dispatch => {
+        dispatch(clearArticle());
+        dispatch(enableEdit());
+    }
+}
+
+export const clearArticle = () => {
+    console.log('clear action')
+    return {
+        type: actionTypes.CLEAR_ARTICLE
+    }
+}

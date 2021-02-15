@@ -7,13 +7,26 @@ const initialState = {
         description: '',
         content: ''
     },
+    articles: [],
     readOnly: false,
     editor: null
 }
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case actionTypes.CLEAR_ARTICLE:
+            console.log('clear')
+            return {
+                ...state,
+                articleForm: {
+                    articleId:'',
+                    title: '',
+                    description: '',
+                    content: ''
+                }
+            }
         case actionTypes.ENABLE_EDIT:
+            console.log('edit')
             state.editor.isReadOnly = false
             return {
                 ...state,
@@ -51,9 +64,19 @@ const reducer = (state = initialState, action) => {
         case actionTypes.FETCH_ARTICLES_START:
             return {...state};
         case actionTypes.FETCH_ARTICLES_SUCCESS:
-            return {...state};
+            console.log('fetch');
+            console.log(action.articles)
+            return {
+                ...state,
+                articles: action.articles
+            }
         case actionTypes.FETCH_ARTICLES_FAIL:
             return {...state};
+        case actionTypes.FETCH_ARTICLE_SUCCESS:
+            return {
+                ...state,
+                articleForm: action.article
+            }
         default:
             return state;
     }

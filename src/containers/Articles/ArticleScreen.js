@@ -1,32 +1,16 @@
 import React, {Component} from 'react';
 import {Box} from "@material-ui/core";
+import {connect} from "react-redux";
 
 import SearchAddGrid from "../../components/UI/Search/SearchAddGrid";
 import ArticleItems from "../../components/Article/ArticleItem/ArticleItems";
 import Pagination from '../../components/UI/Pagination/Pagination';
-import axios from '../../axios-url';
+import * as actions from "../../store/actions";
 
 class ArticleScreen extends Component {
-    state = {
-        articles: []
-    }
 
     componentDidMount() {
-        axios.get('/articles.json').then(
-            res => {
-                const fetchedArticles = [];
-                for (let key in res.data) {
-                    console.log(res.data[key]);
-                    fetchedArticles.push({
-                        ...res.data[key],
-                        id:key
-                    });
-                }
-                this.setState({articles:fetchedArticles})
-            }
-        ).catch(err => {
-            console.log(`There is err ${err}`);
-        })
+        this.props.onFetchArticles();
     }
 
     render() {
@@ -37,11 +21,23 @@ class ArticleScreen extends Component {
                         <SearchAddGrid/>
                     </Box>
                 </Box>
-                <ArticleItems articles={this.state.articles}/>
+                <ArticleItems articles={this.props.articles}/>
                 <Pagination/>
             </Box>
         );
     };
 }
 
-export default ArticleScreen;
+const mapStateToProps = state => {
+    return {
+        articles: state.article.articles,
+    }
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onFetchArticles: () => dispatch(actions.fetchArticles()),
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ArticleScreen);

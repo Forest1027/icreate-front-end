@@ -6,6 +6,8 @@ import TextField from "@material-ui/core/TextField";
 import {connect} from "react-redux";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import {CKEditor} from "@ckeditor/ckeditor5-react";
+import {NavLink} from "react-router-dom";
+
 
 import * as actions from '../../store/actions/index';
 import Aux from '../../hoc/Auxiliary';
@@ -44,19 +46,25 @@ const styles = theme => ({
     },
     buttonBox: {
         textAlign: 'left',
-    }
+    },
+    link: {
+        textDecoration: 'none'
+    },
+
 });
 
 class ArticleDetail extends Component {
     componentDidMount() {
+        console.log('componentdidmount')
         console.log(this.props.articleForm.articleId)
-
     }
 
     createArticleHandler = () => {
         const formData = {};
         for (let formIdentifier in this.props.articleForm) {
-            formData[formIdentifier] = this.props.articleForm[formIdentifier];
+            if(formIdentifier !== 'articleId') {
+                formData[formIdentifier] = this.props.articleForm[formIdentifier];
+            }
         }
         this.props.onCreateArticle(formData)
     };
@@ -90,8 +98,8 @@ class ArticleDetail extends Component {
                                         : (<Aux>
                                             <Button className={classes.editButton} variant="contained"
                                                     onClick={this.createArticleHandler}>Create</Button>
-                                            <Button className={classes.cancelButton}
-                                                    variant="outlined">Cancel</Button>
+                                            <NavLink className={classes.link} to='/articles'> <Button className={classes.cancelButton}
+                                                                                                           variant="outlined">Cancel</Button></NavLink>
                                         </Aux>))
                             }
 
@@ -145,7 +153,7 @@ const mapDispatchToProps = dispatch => {
         onInputChange: (name, value) => dispatch(actions.changeArticleContent(name, value)),
         onInitEditor: (editor) => dispatch(actions.initEditor(editor)),
         onEditClicked: () => dispatch(actions.enableEdit()),
-        onUpdateCancelClicked : () => dispatch(actions.disableEdit())
+        onUpdateCancelClicked : () => dispatch(actions.disableEdit()),
     }
 };
 

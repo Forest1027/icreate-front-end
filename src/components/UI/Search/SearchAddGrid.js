@@ -6,9 +6,10 @@ import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import {useMediaQuery} from "@material-ui/core";
 import {NavLink} from "react-router-dom";
-
+import {connect} from "react-redux";
 
 import Search from "./Search";
+import * as actions from "../../../store/actions";
 
 
 
@@ -35,17 +36,17 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const SearchAddGrid = () => {
+const SearchAddGrid = (props) => {
     const classes = useStyles();
     const matches = useMediaQuery('(min-width: 600px)')
     return (
         <Grid container direction="row" justify="flex-start" alignItems="center">
             <Search/>
-            <Grid item sm={4} xs={3} className={classes.buttonGrid}>
+            <Grid item sm={4} xs={3} className={classes.buttonGrid} onClick={props.onCreateClicked}>
                 {matches? (
                     <NavLink className={classes.link} to='/articleDetail'><Button variant="contained" className={classes.button}>Create</Button></NavLink>
                 ):(
-                    <NavLink className={classes.link} to='/articleDetail'><IconButton  variant="contained" className={classes.button} ><AddIcon/></IconButton></NavLink>
+                    <NavLink className={classes.link} to='/articleDetail'><IconButton  variant="contained" className={classes.button}><AddIcon/></IconButton></NavLink>
 
                 )}
 
@@ -54,4 +55,10 @@ const SearchAddGrid = () => {
     );
 };
 
-export default SearchAddGrid;
+const mapDispatchToProps = dispatch => {
+    return {
+        onCreateClicked: () => dispatch(actions.goToCreateArticle())
+    }
+};
+
+export default connect(null, mapDispatchToProps)(SearchAddGrid);
