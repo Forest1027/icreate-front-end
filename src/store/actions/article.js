@@ -1,6 +1,7 @@
 import * as actionTypes from './actionTypes';
 import {databaseRef} from "../../database";
 
+
 export const enableEdit = () => {
     return {
         type: actionTypes.ENABLE_EDIT

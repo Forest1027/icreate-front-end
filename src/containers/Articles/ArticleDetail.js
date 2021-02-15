@@ -8,6 +8,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import {CKEditor} from "@ckeditor/ckeditor5-react";
 import {NavLink} from "react-router-dom";
 
+
 import * as actions from '../../store/actions/index';
 import Aux from '../../hoc/Auxiliary';
 
@@ -49,6 +50,7 @@ const styles = theme => ({
     link: {
         textDecoration: 'none'
     },
+
 });
 
 class ArticleDetail extends Component {
