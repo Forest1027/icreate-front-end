@@ -8,10 +8,12 @@ import thunk from 'redux-thunk';
 import './index.css';
 import App from './App';
 import articleReducer from './store/reducers/article';
+import uiReducer from './store/reducers/uiComponents';
 
-const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__: compose;
+const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
 const rootReducer = combineReducers({
-    article: articleReducer
+    article: articleReducer,
+    ui: uiReducer
 });
 const store = createStore(rootReducer, composeEnhancers(
     applyMiddleware(thunk)

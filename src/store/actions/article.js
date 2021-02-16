@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes';
 import {databaseRef} from "../../database";
+import {openSnackbar} from "./uiComponents";
 
 
 export const enableEdit = () => {
@@ -62,6 +63,7 @@ export const createArticle = (articleData) => {
                 console.log('res');
                 console.log(newarticleRef)
                 dispatch(createArticleSuccess(newarticleRef.key));
+                dispatch(openSnackbar());
                 dispatch(disableEdit());
             }
         });
@@ -179,6 +181,7 @@ export const updateArticle = (articleData) => {
                 dispatch(updateArticleFail(error));
             } else {
                 dispatch(updateArticleSuccess(articleData));
+                dispatch(openSnackbar());
                 dispatch(disableEdit());
             }
         });

@@ -6,6 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import {connect} from "react-redux";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import {CKEditor} from "@ckeditor/ckeditor5-react";
+import Snackbar from '@material-ui/core/Snackbar';
 import {NavLink} from "react-router-dom";
 
 
@@ -92,6 +93,12 @@ class ArticleDetail extends Component {
         const {classes} = this.props;
         return (
             <Box justifyContent="center" display="flex" flexWrap='wrap'>
+                <Snackbar
+                    anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                    open={this.props.open}
+                    onClose={this.props.onCloseSnackbar}
+                    message="Congratulations! Your changes have been saved."
+                />
                 <Box justifyContent="flex-start" width='80%'>
                     <form className={classes.root} noValidate autoComplete="off" onSubmit={this.createArticleHandler}>
                         <Box className={classes.buttonBox}>
@@ -101,7 +108,8 @@ class ArticleDetail extends Component {
                                 : (
                                     this.props.articleForm.articleId !== '' ?
                                         (<Aux>
-                                            <Button className={classes.editButton} variant="contained" onClick={this.updateArticleHandler}>Update</Button>
+                                            <Button className={classes.editButton} variant="contained"
+                                                    onClick={this.updateArticleHandler}>Update</Button>
                                             <Button className={classes.cancelButton}
                                                     variant="outlined"
                                                     onClick={this.props.onUpdateCancelClicked}>Cancel</Button>
@@ -156,6 +164,9 @@ const mapStateToProps = state => {
     return {
         articleForm: state.article.articleForm,
         readOnly: state.article.readOnly,
+        open: state.ui.snackbar.open,
+        horizontal: state.ui.snackbar.horizontal,
+        vertical: state.ui.snackbar.vertical
     }
 };
 
@@ -167,6 +178,7 @@ const mapDispatchToProps = dispatch => {
         onEditClicked: () => dispatch(actions.enableEdit()),
         onUpdateCancelClicked: () => dispatch(actions.disableEdit()),
         onUpdateArticle: (articleData) => dispatch(actions.updateArticle(articleData)),
+        onCloseSnackbar: () => dispatch(actions.closeSnackbar()),
     }
 };
 

@@ -10,3 +10,7 @@ export {
     updateArticle,
     deleteArticle
 } from './article';
+
+export {
+    closeSnackbar
+} from './uiComponents';
