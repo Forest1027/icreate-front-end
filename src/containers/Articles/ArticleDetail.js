@@ -62,12 +62,22 @@ class ArticleDetail extends Component {
     createArticleHandler = () => {
         const formData = {};
         for (let formIdentifier in this.props.articleForm) {
-            if(formIdentifier !== 'articleId') {
+            if (formIdentifier !== 'articleId') {
                 formData[formIdentifier] = this.props.articleForm[formIdentifier];
             }
         }
-        this.props.onCreateArticle(formData)
+        this.props.onCreateArticle(formData);
     };
+
+    updateArticleHandler = () => {
+        const formData = {};
+        for (let formIdentifier in this.props.articleForm) {
+            formData[formIdentifier] = this.props.articleForm[formIdentifier];
+        }
+        console.log('update handler')
+        console.log(formData)
+        this.props.onUpdateArticle(formData);
+    }
 
     inputChangeHandler = (event) => {
         this.props.onInputChange(event.target.name, event.target.value)
@@ -91,15 +101,17 @@ class ArticleDetail extends Component {
                                 : (
                                     this.props.articleForm.articleId !== '' ?
                                         (<Aux>
-                                            <Button className={classes.editButton} variant="contained">Update</Button>
+                                            <Button className={classes.editButton} variant="contained" onClick={this.updateArticleHandler}>Update</Button>
                                             <Button className={classes.cancelButton}
-                                                    variant="outlined" onClick={this.props.onUpdateCancelClicked}>Cancel</Button>
+                                                    variant="outlined"
+                                                    onClick={this.props.onUpdateCancelClicked}>Cancel</Button>
                                         </Aux>)
                                         : (<Aux>
                                             <Button className={classes.editButton} variant="contained"
                                                     onClick={this.createArticleHandler}>Create</Button>
-                                            <NavLink className={classes.link} to='/articles'> <Button className={classes.cancelButton}
-                                                                                                           variant="outlined">Cancel</Button></NavLink>
+                                            <NavLink className={classes.link} to='/articles'> <Button
+                                                className={classes.cancelButton}
+                                                variant="outlined">Cancel</Button></NavLink>
                                         </Aux>))
                             }
 
@@ -153,7 +165,8 @@ const mapDispatchToProps = dispatch => {
         onInputChange: (name, value) => dispatch(actions.changeArticleContent(name, value)),
         onInitEditor: (editor) => dispatch(actions.initEditor(editor)),
         onEditClicked: () => dispatch(actions.enableEdit()),
-        onUpdateCancelClicked : () => dispatch(actions.disableEdit()),
+        onUpdateCancelClicked: () => dispatch(actions.disableEdit()),
+        onUpdateArticle: (articleData) => dispatch(actions.updateArticle(articleData)),
     }
 };
 
