@@ -6,6 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import {connect} from "react-redux";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import {CKEditor} from "@ckeditor/ckeditor5-react";
+import Snackbar from '@material-ui/core/Snackbar';
 import {NavLink} from "react-router-dom";
 
 
@@ -62,12 +63,22 @@ class ArticleDetail extends Component {
     createArticleHandler = () => {
         const formData = {};
         for (let formIdentifier in this.props.articleForm) {
-            if(formIdentifier !== 'articleId') {
+            if (formIdentifier !== 'articleId') {
                 formData[formIdentifier] = this.props.articleForm[formIdentifier];
             }
         }
-        this.props.onCreateArticle(formData)
+        this.props.onCreateArticle(formData);
     };
+
+    updateArticleHandler = () => {
+        const formData = {};
+        for (let formIdentifier in this.props.articleForm) {
+            formData[formIdentifier] = this.props.articleForm[formIdentifier];
+        }
+        console.log('update handler')
+        console.log(formData)
+        this.props.onUpdateArticle(formData);
+    }
 
     inputChangeHandler = (event) => {
         this.props.onInputChange(event.target.name, event.target.value)
@@ -82,6 +93,12 @@ class ArticleDetail extends Component {
         const {classes} = this.props;
         return (
             <Box justifyContent="center" display="flex" flexWrap='wrap'>
+                <Snackbar
+                    anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                    open={this.props.open}
+                    onClose={this.props.onCloseSnackbar}
+                    message="Congratulations! Your changes have been saved."
+                />
                 <Box justifyContent="flex-start" width='80%'>
                     <form className={classes.root} noValidate autoComplete="off" onSubmit={this.createArticleHandler}>
                         <Box className={classes.buttonBox}>
@@ -91,15 +108,18 @@ class ArticleDetail extends Component {
                                 : (
                                     this.props.articleForm.articleId !== '' ?
                                         (<Aux>
-                                            <Button className={classes.editButton} variant="contained">Update</Button>
+                                            <Button className={classes.editButton} variant="contained"
+                                                    onClick={this.updateArticleHandler}>Update</Button>
                                             <Button className={classes.cancelButton}
-                                                    variant="outlined" onClick={this.props.onUpdateCancelClicked}>Cancel</Button>
+                                                    variant="outlined"
+                                                    onClick={this.props.onUpdateCancelClicked}>Cancel</Button>
                                         </Aux>)
                                         : (<Aux>
                                             <Button className={classes.editButton} variant="contained"
                                                     onClick={this.createArticleHandler}>Create</Button>
-                                            <NavLink className={classes.link} to='/articles'> <Button className={classes.cancelButton}
-                                                                                                           variant="outlined">Cancel</Button></NavLink>
+                                            <NavLink className={classes.link} to='/articles'> <Button
+                                                className={classes.cancelButton}
+                                                variant="outlined">Cancel</Button></NavLink>
                                         </Aux>))
                             }
 
@@ -144,6 +164,9 @@ const mapStateToProps = state => {
     return {
         articleForm: state.article.articleForm,
         readOnly: state.article.readOnly,
+        open: state.ui.snackbar.open,
+        horizontal: state.ui.snackbar.horizontal,
+        vertical: state.ui.snackbar.vertical
     }
 };
 
@@ -153,7 +176,9 @@ const mapDispatchToProps = dispatch => {
         onInputChange: (name, value) => dispatch(actions.changeArticleContent(name, value)),
         onInitEditor: (editor) => dispatch(actions.initEditor(editor)),
         onEditClicked: () => dispatch(actions.enableEdit()),
-        onUpdateCancelClicked : () => dispatch(actions.disableEdit()),
+        onUpdateCancelClicked: () => dispatch(actions.disableEdit()),
+        onUpdateArticle: (articleData) => dispatch(actions.updateArticle(articleData)),
+        onCloseSnackbar: () => dispatch(actions.closeSnackbar()),
     }
 };
 

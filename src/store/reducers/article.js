@@ -27,7 +27,9 @@ const reducer = (state = initialState, action) => {
             }
         case actionTypes.ENABLE_EDIT:
             console.log('edit')
-            state.editor.isReadOnly = false
+            if(state.editor !== null) {
+                state.editor.isReadOnly = false
+            }
             return {
                 ...state,
                 readOnly: false
@@ -73,6 +75,12 @@ const reducer = (state = initialState, action) => {
         case actionTypes.FETCH_ARTICLES_FAIL:
             return {...state};
         case actionTypes.FETCH_ARTICLE_SUCCESS:
+            action.article['articleId'] = action.articleId;
+            return {
+                ...state,
+                articleForm: action.article
+            }
+        case actionTypes.UPDATE_ARTICLE_SUCCESS:
             return {
                 ...state,
                 articleForm: action.article

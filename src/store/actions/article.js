@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes';
 import {databaseRef} from "../../database";
+import {openSnackbar, closeDialog} from "./uiComponents";
 
 
 export const enableEdit = () => {
@@ -62,6 +63,7 @@ export const createArticle = (articleData) => {
                 console.log('res');
                 console.log(newarticleRef)
                 dispatch(createArticleSuccess(newarticleRef.key));
+                dispatch(openSnackbar());
                 dispatch(disableEdit());
             }
         });
@@ -105,10 +107,11 @@ export const fetchArticles = () => {
     }
 };
 
-export const fetchArticleSuccess = (article) => {
+export const fetchArticleSuccess = (article, articleId) => {
     return {
         type: actionTypes.FETCH_ARTICLE_SUCCESS,
-        article: article
+        article: article,
+        articleId: articleId
     }
 };
 
@@ -126,8 +129,10 @@ export const fetchArticleStart = () => {
 export const fetchArticle = (articleId) => {
     return dispatch => {
         dispatch(enableEdit());
+        console.log('fetch article')
+        console.log(articleId)
         databaseRef.ref('articles/' + articleId).on('value', snapshot => {
-            dispatch(fetchArticleSuccess(snapshot.val()));
+            dispatch(fetchArticleSuccess(snapshot.val(), articleId));
         })
     }
 }
@@ -145,3 +150,74 @@ export const clearArticle = () => {
         type: actionTypes.CLEAR_ARTICLE
     }
 }
+
+export const updateArticleSuccess = (articleData) => {
+    return {
+        type: actionTypes.UPDATE_ARTICLE_SUCCESS,
+        article: articleData
+    }
+};
+
+export const updateArticleFail = (error) => {
+    return {
+        type: actionTypes.UPDATE_ARTICLE_FAIL,
+        error: error
+    }
+};
+
+export const updateArticleStart = () => {
+    return {
+        type: actionTypes.UPDATE_ARTICLE_START
+    }
+};
+
+export const updateArticle = (articleData) => {
+    return dispatch => {
+        dispatch(updateArticleStart());
+        console.log('update')
+        console.log(articleData.articleId)
+        databaseRef.ref('articles/' + articleData.articleId).set(articleData, error => {
+            if (error) {
+                dispatch(updateArticleFail(error));
+            } else {
+                dispatch(updateArticleSuccess(articleData));
+                dispatch(openSnackbar());
+                dispatch(disableEdit());
+            }
+        });
+    }
+}
+
+export const deleteArticleStart = () => {
+    return {
+        type: actionTypes.DELETE_ARTICLE_START
+    }
+}
+
+export const deleteArticleSuccess = () => {
+    return {
+        type: actionTypes.DELETE_ARTICLE_SUCCESS
+    }
+}
+
+export const deleteArticleFail = (error) => {
+    return {
+        type: actionTypes.DELETE_ARTICLE_FAIL,
+        error: error
+    }
+}
+
+export const deleteArticle = (articleId) => {
+    return dispatch => {
+        deleteArticleStart();
+        databaseRef.ref("articles/"+articleId).set(null, error => {
+            if(error) {
+                dispatch(deleteArticleFail(error));
+            }else {
+                dispatch(deleteArticleSuccess());
+                dispatch(closeDialog());
+            }
+        });
+    };
+}
+

@@ -6,5 +6,13 @@ export {
     enableEdit,
     disableEdit,
     fetchArticle,
-    goToCreateArticle
+    goToCreateArticle,
+    updateArticle,
+    deleteArticle
 } from './article';
+
+export {
+    closeSnackbar,
+    openDialog,
+    closeDialog
+} from './uiComponents';
