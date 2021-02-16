@@ -185,3 +185,35 @@ export const updateArticle = (articleData) => {
     }
 }
 
+export const deleteArticleStart = () => {
+    return {
+        type: actionTypes.DELETE_ARTICLE_START
+    }
+}
+
+export const deleteArticleSuccess = () => {
+    return {
+        type: actionTypes.DELETE_ARTICLE_SUCCESS
+    }
+}
+
+export const deleteArticleFail = (error) => {
+    return {
+        type: actionTypes.DELETE_ARTICLE_FAIL,
+        error: error
+    }
+}
+
+export const deleteArticle = (articleId) => {
+    return dispatch => {
+        deleteArticleStart();
+        databaseRef.ref("articles/"+articleId).set(null, error => {
+            if(error) {
+                dispatch(deleteArticleFail(error));
+            }else {
+                dispatch(deleteArticleSuccess());
+            }
+        });
+    };
+}
+

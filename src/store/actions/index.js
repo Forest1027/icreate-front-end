@@ -7,5 +7,6 @@ export {
     disableEdit,
     fetchArticle,
     goToCreateArticle,
-    updateArticle
+    updateArticle,
+    deleteArticle
 } from './article';
