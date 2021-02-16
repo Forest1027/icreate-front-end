@@ -27,10 +27,13 @@ export const FETCH_ARTICLE = 'FETCH_ARTICLE';
 
 export const INIT_EDITOR = 'INIT_EDITOR';
 
-export const ENABLE_EDIT= 'ENABLE_EDIT';
+export const ENABLE_EDIT = 'ENABLE_EDIT';
 export const DISABLE_EDIT = 'DISABLE_EDIT';
 
 export const CLEAR_ARTICLE = 'CLEAR_ARTICLE';
 
 export const OPEN_SNACKBAR = 'OPEN_SNACKBAR';
 export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';
+
+export const OPEN_DIALOG = 'OPEN_DIALOG';
+export const CLOSE_DIALOG = 'CLOSE_DIALOG';

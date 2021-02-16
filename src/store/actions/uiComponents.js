@@ -11,3 +11,16 @@ export const closeSnackbar = () => {
         type: actionTypes.CLOSE_SNACKBAR
     }
 }
+
+export const openDialog = (articleId) => {
+    return {
+        type: actionTypes.OPEN_DIALOG,
+        articleId: articleId
+    }
+}
+
+export const closeDialog = () => {
+    return {
+        type: actionTypes.CLOSE_DIALOG
+    }
+}

@@ -38,7 +38,7 @@ const ArticleItems = (props) => {
                     <Grid item xs={12} sm={3} key={article.articleId}>
                         <Paper className={classes.paper}>
                             <Grid container justify="flex-end">
-                                <IconButton className={classes.iconButton} onClick={() => props.onDeleteArticle(article.articleId)}><HighlightOffIcon fontSize="small"/></IconButton>
+                                <IconButton className={classes.iconButton} onClick={() => props.onDeleteClicked(article.articleId)}><HighlightOffIcon fontSize="small"/></IconButton>
                             </Grid>
                             <NavLink className={classes.link} to='/articleDetail'>
                                 <Grid onClick={() => props.onArticleClicked(article.articleId)}>
@@ -62,7 +62,7 @@ const ArticleItems = (props) => {
 const mapDispatchToProps = dispatch => {
     return {
         onArticleClicked: (id) => dispatch(actions.fetchArticle(id)),
-        onDeleteArticle: (id) => dispatch(actions.deleteArticle(id))
+        onDeleteClicked: (id) => dispatch(actions.openDialog(id))
     }
 };
 

@@ -1,6 +1,6 @@
 import * as actionTypes from './actionTypes';
 import {databaseRef} from "../../database";
-import {openSnackbar} from "./uiComponents";
+import {openSnackbar, closeDialog} from "./uiComponents";
 
 
 export const enableEdit = () => {
@@ -215,6 +215,7 @@ export const deleteArticle = (articleId) => {
                 dispatch(deleteArticleFail(error));
             }else {
                 dispatch(deleteArticleSuccess());
+                dispatch(closeDialog());
             }
         });
     };

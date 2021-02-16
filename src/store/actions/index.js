@@ -12,5 +12,7 @@ export {
 } from './article';
 
 export {
-    closeSnackbar
+    closeSnackbar,
+    openDialog,
+    closeDialog
 } from './uiComponents';
