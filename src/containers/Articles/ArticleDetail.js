@@ -12,6 +12,8 @@ import {NavLink} from "react-router-dom";
 
 import * as actions from '../../store/actions/index';
 import Aux from '../../hoc/Auxiliary';
+import Progress from "../../components/UI/Progress/Progress";
+import {checkValidity, isNotNull} from "../../shared/utility";
 
 
 const styles = theme => ({
@@ -55,9 +57,34 @@ const styles = theme => ({
 });
 
 class ArticleDetail extends Component {
+    state = {
+        validation: {
+            title: {
+                required: true,
+                valid: false,
+                touched: false
+            },
+            description: {
+                required: true,
+                valid: false,
+                touched: false
+            },
+            content: {
+                required: true,
+                valid: false,
+                touched: false
+            }
+        },
+        formIsValid : false
+    }
+
     componentDidMount() {
         console.log('componentdidmount')
         console.log(this.props.articleForm.articleId)
+    }
+
+    componentWillMount() {
+        this.setState({formIsValid : isNotNull(this.props.articleForm.title) && isNotNull(this.props.articleForm.description) && isNotNull(this.props.articleForm.content)});
     }
 
     createArticleHandler = () => {
@@ -81,18 +108,35 @@ class ArticleDetail extends Component {
     }
 
     inputChangeHandler = (event) => {
-        this.props.onInputChange(event.target.name, event.target.value)
+        const targetName = event.target.name;
+        const targetValue = event.target.value;
+        this.props.onInputChange(targetName, targetValue);
+        const updatedValidationElement = {
+            ...this.state.validation[targetName],
+            valid: checkValidity(targetValue, this.state.validation[targetName]),
+            touched: true
+        }
+        const updatedValidation = {
+            ...this.state.validation,
+            [targetName] : updatedValidationElement
+        }
+        console.log('input change')
+        console.log(this.props.articleForm.content);
+        console.log(isNotNull(this.props.articleForm.content));
+        this.setState({validation: updatedValidation, formIsValid: (isNotNull(this.props.articleForm.title) && isNotNull(this.props.articleForm.description) && isNotNull(this.props.articleForm.content))});
     }
 
-    editorInputChangeHanndler = (event, editor) => {
+    editorInputChangeHandler = (event, editor) => {
         const data = editor.getData();
         this.props.onInputChange('content', data);
+        this.setState({formIsValid: (isNotNull(this.props.articleForm.title) && isNotNull(this.props.articleForm.description) && isNotNull(this.props.articleForm.content))});
     }
 
     render() {
         const {classes} = this.props;
         return (
             <Box justifyContent="center" display="flex" flexWrap='wrap'>
+                <Progress loading={this.props.loading}/>
                 <Snackbar
                     anchorOrigin={{vertical: 'top', horizontal: 'center'}}
                     open={this.props.open}
@@ -109,14 +153,14 @@ class ArticleDetail extends Component {
                                     this.props.articleForm.articleId !== '' ?
                                         (<Aux>
                                             <Button className={classes.editButton} variant="contained"
-                                                    onClick={this.updateArticleHandler}>Update</Button>
+                                                    onClick={this.updateArticleHandler} disabled={!this.state.formIsValid}>Update</Button>
                                             <Button className={classes.cancelButton}
                                                     variant="outlined"
                                                     onClick={this.props.onUpdateCancelClicked}>Cancel</Button>
                                         </Aux>)
                                         : (<Aux>
                                             <Button className={classes.editButton} variant="contained"
-                                                    onClick={this.createArticleHandler}>Create</Button>
+                                                    onClick={this.createArticleHandler} disabled={!this.state.formIsValid}>Create</Button>
                                             <NavLink className={classes.link} to='/articles'> <Button
                                                 className={classes.cancelButton}
                                                 variant="outlined">Cancel</Button></NavLink>
@@ -127,13 +171,13 @@ class ArticleDetail extends Component {
                         <Box className={classes.title}>
                             <TextField id="standard-basic" label="Title" fullWidth name="title"
                                        onChange={this.inputChangeHandler} defaultValue={this.props.articleForm.title}
-                                       inputProps={{readOnly: this.props.readOnly}}/>
+                                       inputProps={{readOnly: this.props.readOnly}} error={!this.state.validation.title.valid && this.state.validation.title.touched} helperText={(!this.state.validation.title.valid && this.state.validation.title.touched)?"Cannot be empty":""}/>
                         </Box>
                         <Box>
                             <TextField id="standard-basic" label="One line description" fullWidth name="description"
                                        onChange={this.inputChangeHandler}
                                        defaultValue={this.props.articleForm.description}
-                                       inputProps={{readOnly: this.props.readOnly}}/>
+                                       inputProps={{readOnly: this.props.readOnly}} error={!this.state.validation.description.valid && this.state.validation.description.touched} helperText={(!this.state.validation.title.valid && this.state.validation.title.touched)?"Cannot be empty":""}/>
                         </Box>
                         <Box className={classes.editor}>
                             <CKEditor
@@ -145,7 +189,7 @@ class ArticleDetail extends Component {
                                 onReady={editor => {
                                     this.props.onInitEditor(editor);
                                 }}
-                                onChange={this.editorInputChangeHanndler}
+                                onChange={this.editorInputChangeHandler}
                                 onBlur={(event, editor) => {
                                     console.log('Blur.', editor);
                                 }}
@@ -157,7 +201,8 @@ class ArticleDetail extends Component {
                     </form>
                 </Box>
             </Box>);
-    };
+    }
+    ;
 }
 
 const mapStateToProps = state => {
@@ -166,7 +211,8 @@ const mapStateToProps = state => {
         readOnly: state.article.readOnly,
         open: state.ui.snackbar.open,
         horizontal: state.ui.snackbar.horizontal,
-        vertical: state.ui.snackbar.vertical
+        vertical: state.ui.snackbar.vertical,
+        loading: state.article.loading
     }
 };
 

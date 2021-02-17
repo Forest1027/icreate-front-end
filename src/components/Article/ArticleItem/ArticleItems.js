@@ -18,7 +18,8 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         padding: theme.spacing(1),
         textAlign: 'center',
-        height: '100px'
+        height: '150px',
+        overflow: "hidden"
     },
     link: {
         textDecoration: 'none',
@@ -45,7 +46,7 @@ const ArticleItems = (props) => {
                                     <Typography color="textSecondary" gutterBottom>
                                         {article.title}
                                     </Typography>
-                                    <Typography variant="body2" component="p">
+                                    <Typography variant="body2" component="p" >
                                         {article.description}
                                     </Typography>
                                 </Grid>

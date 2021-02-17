@@ -9,7 +9,8 @@ const initialState = {
     },
     articles: [],
     readOnly: false,
-    editor: null
+    editor: null,
+    loading: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -53,37 +54,64 @@ const reducer = (state = initialState, action) => {
                 articleForm: articleForm
             }
         case actionTypes.CREATE_ARTICLE_START:
-            return {...state};
+            return {
+                ...state,
+                loading: true
+            };
         case actionTypes.CREATE_ARTICLE_SUCCESS:
             const form = state.articleForm;
             form.articleId = action.articleId;
             return {
                 ...state,
-                articleForm: form
+                articleForm: form,
+                loading: false
             };
         case actionTypes.CREATE_ARTICLE_FAIL:
-            return {...state};
+            return {
+                ...state,
+                loading: false
+            };
         case actionTypes.FETCH_ARTICLES_START:
-            return {...state};
+            return {
+                ...state,
+                loading: true
+            };
         case actionTypes.FETCH_ARTICLES_SUCCESS:
-            console.log('fetch');
+            console.log(actionTypes.FETCH_ARTICLES_SUCCESS);
             console.log(action.articles)
             return {
                 ...state,
-                articles: action.articles
+                articles: action.articles,
+                loading: false
             }
         case actionTypes.FETCH_ARTICLES_FAIL:
             return {...state};
         case actionTypes.FETCH_ARTICLE_SUCCESS:
-            action.article['articleId'] = action.articleId;
+            console.log(actionTypes.FETCH_ARTICLE_SUCCESS)
+            console.log(action.articleId)
+            console.log(action.article)
+            if(action.article !== null) {
+                action.article['articleId'] = action.articleId;
+            }
             return {
                 ...state,
-                articleForm: action.article
+                articleForm: action.article,
+                loading: false
             }
         case actionTypes.UPDATE_ARTICLE_SUCCESS:
             return {
                 ...state,
                 articleForm: action.article
+            }
+        case actionTypes.DELETE_ARTICLE_START:
+            return {
+                ...state,
+                loading: true
+            }
+        case actionTypes.DELETE_ARTICLE_SUCCESS:
+            return {
+                ...state,
+                loading: false
             }
         default:
             return state;
