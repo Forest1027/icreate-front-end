@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import {withStyles} from "@material-ui/core/styles";
+import Progress from "../../components/UI/Progress/Progress";
 
 import SearchAddGrid from "../../components/UI/Search/SearchAddGrid";
 import ArticleItems from "../../components/Article/ArticleItem/ArticleItems";
@@ -20,6 +21,10 @@ const styles = () => ({
 });
 
 class ArticleScreen extends Component {
+    componentWillMount() {
+        console.log('mount')
+        console.log(this.props.loading)
+    }
 
     componentDidMount() {
         this.props.onFetchArticles();
@@ -34,6 +39,7 @@ class ArticleScreen extends Component {
                         <SearchAddGrid/>
                     </Box>
                 </Box>
+                <Progress loading={this.props.loading}/>
                 <ArticleItems articles={this.props.articles}/>
                 <Pagination/>
                 <Dialog
@@ -61,7 +67,8 @@ const mapStateToProps = state => {
     return {
         articles: state.article.articles,
         open: state.ui.dialog.open,
-        deleteArticleId: state.ui.dialog.articleId
+        deleteArticleId: state.ui.dialog.articleId,
+        loading: state.article.loading
     }
 };
 

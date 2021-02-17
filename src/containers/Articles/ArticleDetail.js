@@ -12,6 +12,7 @@ import {NavLink} from "react-router-dom";
 
 import * as actions from '../../store/actions/index';
 import Aux from '../../hoc/Auxiliary';
+import Progress from "../../components/UI/Progress/Progress";
 
 
 const styles = theme => ({
@@ -93,6 +94,7 @@ class ArticleDetail extends Component {
         const {classes} = this.props;
         return (
             <Box justifyContent="center" display="flex" flexWrap='wrap'>
+                <Progress loading={this.props.loading}/>
                 <Snackbar
                     anchorOrigin={{vertical: 'top', horizontal: 'center'}}
                     open={this.props.open}
@@ -166,7 +168,8 @@ const mapStateToProps = state => {
         readOnly: state.article.readOnly,
         open: state.ui.snackbar.open,
         horizontal: state.ui.snackbar.horizontal,
-        vertical: state.ui.snackbar.vertical
+        vertical: state.ui.snackbar.vertical,
+        loading: state.article.loading
     }
 };
 

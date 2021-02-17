@@ -9,7 +9,8 @@ const initialState = {
     },
     articles: [],
     readOnly: false,
-    editor: null
+    editor: null,
+    loading: true
 }
 
 const reducer = (state = initialState, action) => {
@@ -53,24 +54,35 @@ const reducer = (state = initialState, action) => {
                 articleForm: articleForm
             }
         case actionTypes.CREATE_ARTICLE_START:
-            return {...state};
+            return {
+                ...state,
+                loading: true
+            };
         case actionTypes.CREATE_ARTICLE_SUCCESS:
             const form = state.articleForm;
             form.articleId = action.articleId;
             return {
                 ...state,
-                articleForm: form
+                articleForm: form,
+                loading: false
             };
         case actionTypes.CREATE_ARTICLE_FAIL:
-            return {...state};
+            return {
+                ...state,
+                loading: false
+            };
         case actionTypes.FETCH_ARTICLES_START:
-            return {...state};
+            return {
+                ...state,
+                loading: true
+            };
         case actionTypes.FETCH_ARTICLES_SUCCESS:
             console.log('fetch');
             console.log(action.articles)
             return {
                 ...state,
-                articles: action.articles
+                articles: action.articles,
+                loading: false
             }
         case actionTypes.FETCH_ARTICLES_FAIL:
             return {...state};
@@ -84,6 +96,16 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 articleForm: action.article
+            }
+        case actionTypes.DELETE_ARTICLE_START:
+            return {
+                ...state,
+                loading: true
+            }
+        case actionTypes.DELETE_ARTICLE_SUCCESS:
+            return {
+                ...state,
+                loading: false
             }
         default:
             return state;

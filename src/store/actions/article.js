@@ -85,11 +85,14 @@ export const fetchArticlesFail = (error) => {
 };
 
 export const fetchArticlesStart = () => {
-
+    return {
+        type: actionTypes.FETCH_ARTICLES_START
+    }
 };
 
 export const fetchArticles = () => {
     return dispatch => {
+        dispatch(fetchArticlesStart());
         const ref = databaseRef.ref('articles');
         ref.on('value', (snapshot) => {
             const res = snapshot.val();
