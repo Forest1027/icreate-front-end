@@ -10,7 +10,7 @@ const initialState = {
     articles: [],
     readOnly: false,
     editor: null,
-    loading: true
+    loading: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -77,7 +77,7 @@ const reducer = (state = initialState, action) => {
                 loading: true
             };
         case actionTypes.FETCH_ARTICLES_SUCCESS:
-            console.log('fetch');
+            console.log(actionTypes.FETCH_ARTICLES_SUCCESS);
             console.log(action.articles)
             return {
                 ...state,
@@ -87,10 +87,16 @@ const reducer = (state = initialState, action) => {
         case actionTypes.FETCH_ARTICLES_FAIL:
             return {...state};
         case actionTypes.FETCH_ARTICLE_SUCCESS:
-            action.article['articleId'] = action.articleId;
+            console.log(actionTypes.FETCH_ARTICLE_SUCCESS)
+            console.log(action.articleId)
+            console.log(action.article)
+            if(action.article !== null) {
+                action.article['articleId'] = action.articleId;
+            }
             return {
                 ...state,
-                articleForm: action.article
+                articleForm: action.article,
+                loading: false
             }
         case actionTypes.UPDATE_ARTICLE_SUCCESS:
             return {

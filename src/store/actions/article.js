@@ -1,6 +1,6 @@
 import * as actionTypes from './actionTypes';
 import {databaseRef} from "../../database";
-import {openSnackbar, closeDialog} from "./uiComponents";
+import {openSnackbar, closeDialog, closeSnackbar} from "./uiComponents";
 
 
 export const enableEdit = () => {
@@ -56,6 +56,7 @@ export const createArticle = (articleData) => {
         let newarticleRef = databaseRef.ref('articles/').push();
         console.log('push')
         console.log(newarticleRef.key)
+        articleData.articleId = newarticleRef.key
         newarticleRef.set(articleData, error => {
             if (error) {
                 dispatch(createArticleFail(error));
@@ -92,6 +93,7 @@ export const fetchArticlesStart = () => {
 
 export const fetchArticles = () => {
     return dispatch => {
+        console.log(actionTypes.FETCH_ARTICLES)
         dispatch(fetchArticlesStart());
         const ref = databaseRef.ref('articles');
         ref.on('value', (snapshot) => {
@@ -126,15 +128,21 @@ export const fetchArticleFail = (error) => {
 };
 
 export const fetchArticleStart = () => {
-
+    return {
+        type: actionTypes.FETCH_ARTICLE_START
+    }
 };
 
 export const fetchArticle = (articleId) => {
     return dispatch => {
+        console.log(actionTypes.FETCH_ARTICLE)
+        dispatch(closeSnackbar());
         dispatch(enableEdit());
+        dispatch(fetchArticleStart());
         console.log('fetch article')
         console.log(articleId)
         databaseRef.ref('articles/' + articleId).on('value', snapshot => {
+            console.log('action '+actionTypes.FETCH_ARTICLE_SUCCESS)
             dispatch(fetchArticleSuccess(snapshot.val(), articleId));
         })
     }
@@ -192,18 +200,21 @@ export const updateArticle = (articleData) => {
 }
 
 export const deleteArticleStart = () => {
+    console.log(actionTypes.DELETE_ARTICLE_START)
     return {
         type: actionTypes.DELETE_ARTICLE_START
     }
 }
 
 export const deleteArticleSuccess = () => {
+    console.log(actionTypes.DELETE_ARTICLE_SUCCESS)
     return {
         type: actionTypes.DELETE_ARTICLE_SUCCESS
     }
 }
 
 export const deleteArticleFail = (error) => {
+    console.log(actionTypes.DELETE_ARTICLE_FAIL)
     return {
         type: actionTypes.DELETE_ARTICLE_FAIL,
         error: error
@@ -212,6 +223,7 @@ export const deleteArticleFail = (error) => {
 
 export const deleteArticle = (articleId) => {
     return dispatch => {
+        console.log(actionTypes.DELETE_ARTICLE)
         deleteArticleStart();
         databaseRef.ref("articles/"+articleId).set(null, error => {
             if(error) {
