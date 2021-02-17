@@ -52,6 +52,7 @@ export const createArticleStart = () => {
 
 export const createArticle = (articleData) => {
     return dispatch => {
+        dispatch(closeSnackbar());
         dispatch(createArticleStart());
         let newarticleRef = databaseRef.ref('articles/').push();
         console.log('push')
@@ -150,6 +151,7 @@ export const fetchArticle = (articleId) => {
 
 export const goToCreateArticle = () => {
     return dispatch => {
+        dispatch(closeSnackbar());
         dispatch(clearArticle());
         dispatch(enableEdit());
     }
