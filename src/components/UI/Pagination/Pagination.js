@@ -16,13 +16,13 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const PaginationOutlined = () => {
+const PaginationOutlined = (props) => {
     const classes = useStyles('');
 
     return (
         <Grid container className={classes.root}>
                 <div className={classes.pagination}>
-                    <Pagination count={10} variant="outlined" />
+                    <Pagination count={props.count} variant="outlined" onChange={(event, page) => props.changed(page)} />
                 </div>
         </Grid>
     );

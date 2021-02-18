@@ -109,6 +109,7 @@ export const fetchArticles = () => {
             console.log('action')
             console.log(fetchedArticles)
             dispatch(fetchArticlesSuccess(fetchedArticles));
+            dispatch(paginationDisplayArticles(1));
         })
     }
 };
@@ -236,5 +237,12 @@ export const deleteArticle = (articleId) => {
             }
         });
     };
+}
+
+export const paginationDisplayArticles = (pageNum) => {
+    return {
+        type : actionTypes.PAGINATION_DISPLAY_ARTICLES,
+        page: pageNum
+    }
 }
 

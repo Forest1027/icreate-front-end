@@ -8,7 +8,8 @@ export {
     fetchArticle,
     goToCreateArticle,
     updateArticle,
-    deleteArticle
+    deleteArticle,
+    paginationDisplayArticles
 } from './article';
 
 export {

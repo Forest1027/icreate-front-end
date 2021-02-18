@@ -40,8 +40,8 @@ class ArticleScreen extends Component {
                     </Box>
                 </Box>
                 <Progress loading={this.props.loading}/>
-                <ArticleItems articles={this.props.articles}/>
-                <Pagination/>
+                <ArticleItems articles={this.props.displayArticles}/>
+                <Pagination count={this.props.count} changed={(pageNum) => this.props.onChangePage(pageNum)}/>
                 <Dialog
                     open={this.props.open}
                     onClose={this.props.onCloseDialog}
@@ -68,7 +68,9 @@ const mapStateToProps = state => {
         articles: state.article.articles,
         open: state.ui.dialog.open,
         deleteArticleId: state.ui.dialog.articleId,
-        loading: state.article.loading
+        loading: state.article.loading,
+        displayArticles: state.article.displayArticles,
+        count: state.article.pagination.count
     }
 };
 
@@ -76,7 +78,8 @@ const mapDispatchToProps = dispatch => {
     return {
         onFetchArticles: () => dispatch(actions.fetchArticles()),
         onCloseDialog: () => dispatch(actions.closeDialog()),
-        onDeleteArticle: (id) => dispatch(actions.deleteArticle(id))
+        onDeleteArticle: (id) => dispatch(actions.deleteArticle(id)),
+        onChangePage: (pageNum) => dispatch(actions.paginationDisplayArticles(pageNum)),
     }
 };
 
