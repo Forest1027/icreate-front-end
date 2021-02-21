@@ -9,7 +9,8 @@ export {
     goToCreateArticle,
     updateArticle,
     deleteArticle,
-    paginationDisplayArticles
+    paginationDisplayArticles,
+    setArticleId
 } from './article';
 
 export {

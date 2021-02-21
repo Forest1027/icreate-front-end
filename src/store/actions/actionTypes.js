@@ -25,6 +25,8 @@ export const FETCH_ARTICLE_FAIL = 'FETCH_ARTICLE_FAIL';
 export const FETCH_ARTICLE_START = 'FETCH_ARTICLE_START';
 export const FETCH_ARTICLE = 'FETCH_ARTICLE';
 
+export const SET_ARTICLE_ID = 'SET_ARTICLE_ID';
+
 export const INIT_EDITOR = 'INIT_EDITOR';
 
 export const ENABLE_EDIT = 'ENABLE_EDIT';
@@ -39,3 +41,8 @@ export const OPEN_DIALOG = 'OPEN_DIALOG';
 export const CLOSE_DIALOG = 'CLOSE_DIALOG';
 
 export const PAGINATION_DISPLAY_ARTICLES = "PAGINATION_DISPLAY_ARTICLES";
+
+export const AUTH_START = 'AUTH_START';
+export const AUTH_SUCCESS = 'AUTH_SUCCESS';
+export const AUTH_FAIL = 'AUTH_FAIL';
+export const AUTH_LOGOUT = 'AUTH_LOGOUT';
