@@ -2,6 +2,7 @@ import * as actionTypes from './actionTypes';
 import {openSnackbar, closeDialog, closeSnackbar} from "./uiComponents";
 
 import axios from "./../../axios-url";
+import {isNotNull} from "../../shared/utility";
 
 export const enableEdit = () => {
     return {
@@ -23,6 +24,8 @@ export const initEditor = (editor) => {
 };
 
 export const changeArticleContent = (name, value) => {
+    console.log('change article content')
+    console.log(name, value)
     return {
         type: actionTypes.CHANGE_ARTICLE_CONTENT,
         attrName: name,
@@ -49,11 +52,13 @@ export const createArticleStart = () => {
     }
 };
 
-export const createArticle = (articleData) => {
+export const createArticle = (articleData, token) => {
     return dispatch => {
         dispatch(closeSnackbar());
         dispatch(createArticleStart());
-        axios.post('/articles.json', articleData)
+        console.log('create article')
+        console.log(articleData)
+        axios.post('/articles.json?auth='+token, articleData)
             .then(response => {
                 articleData['articleId'] = response.data.name;
                 dispatch(createArticleSuccess());
@@ -85,10 +90,11 @@ export const fetchArticlesStart = () => {
     }
 };
 
-export const fetchArticles = () => {
+export const fetchArticles = (token, userId) => {
     return dispatch => {
         dispatch(fetchArticlesStart());
-        axios.get('/articles.json').then(
+        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId+'"';
+        axios.get('/articles.json'+queryParams).then(
             res => {
                 const fetchedArticles = [];
                 for (let key in res.data) {
@@ -138,14 +144,16 @@ export const fetchArticle = (articleId) => {
     return dispatch => {
         dispatch(closeSnackbar());
         dispatch(enableEdit());
-        dispatch(fetchArticleStart());
-        axios.get(`/articles/${articleId}.json`).then(
-            res => {
-                dispatch(fetchArticleSuccess(res.data, articleId));
-            }
-        ).catch(err => {
-            dispatch(fetchArticlesFail(err));
-        })
+        if(isNotNull(articleId)) {
+            dispatch(fetchArticleStart());
+            axios.get(`/articles/${articleId}.json`).then(
+                res => {
+                    dispatch(fetchArticleSuccess(res.data, articleId));
+                }
+            ).catch(err => {
+                dispatch(fetchArticlesFail(err));
+            })
+        }
     }
 }
 
@@ -186,10 +194,8 @@ export const updateArticleStart = () => {
 export const updateArticle = (articleData) => {
     return dispatch => {
         dispatch(updateArticleStart());
-        console.log('updateArticle')
-        console.log(articleData)
         axios.patch(`/articles/${articleData.articleId}.json`, articleData).then(
-            res => {
+            () => {
                 dispatch(updateArticleSuccess(articleData));
                 dispatch(openSnackbar());
                 dispatch(disableEdit());
@@ -224,7 +230,7 @@ export const deleteArticle = (articleId) => {
     return dispatch => {
         deleteArticleStart();
         axios.delete(`/articles/${articleId}.json`).then(
-            res => {
+            () => {
                 dispatch(deleteArticleSuccess(articleId));
                 dispatch(closeDialog());
             }

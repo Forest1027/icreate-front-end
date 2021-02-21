@@ -21,13 +21,9 @@ const styles = () => ({
 });
 
 class ArticleScreen extends Component {
-    componentWillMount() {
-        console.log('mount')
-        console.log(this.props.loading)
-    }
 
     componentDidMount() {
-        this.props.onFetchArticles();
+        this.props.onFetchArticles(this.props.token, this.props.userId);
     }
 
     render() {
@@ -53,7 +49,8 @@ class ArticleScreen extends Component {
                         <Button className={classes.button} onClick={this.props.onCloseDialog}>
                             Cancel
                         </Button>
-                        <Button className={classes.button} onClick={() => this.props.onDeleteArticle(this.props.deleteArticleId)} autoFocus>
+                        <Button className={classes.button}
+                                onClick={() => this.props.onDeleteArticle(this.props.deleteArticleId)} autoFocus>
                             Confirm
                         </Button>
                     </DialogActions>
@@ -70,13 +67,15 @@ const mapStateToProps = state => {
         deleteArticleId: state.ui.dialog.articleId,
         loading: state.article.loading,
         displayArticles: state.article.displayArticles,
-        count: state.article.pagination.count
+        count: state.article.pagination.count,
+        token: state.auth.token,
+        userId: state.auth.userId
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFetchArticles: () => dispatch(actions.fetchArticles()),
+        onFetchArticles: (token, userId) => dispatch(actions.fetchArticles(token, userId)),
         onCloseDialog: () => dispatch(actions.closeDialog()),
         onDeleteArticle: (id) => dispatch(actions.deleteArticle(id)),
         onChangePage: (pageNum) => dispatch(actions.paginationDisplayArticles(pageNum)),

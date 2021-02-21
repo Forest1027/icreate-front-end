@@ -12,7 +12,7 @@ import {NavLink} from "react-router-dom";
 import * as actions from '../../store/actions/index';
 import Aux from '../../hoc/Auxiliary';
 import Progress from "../../components/UI/Progress/Progress";
-import {checkValidity, isNotNull} from "../../shared/utility";
+import {checkValidity} from "../../shared/utility";
 
 
 const styles = theme => ({
@@ -80,13 +80,12 @@ class ArticleDetail extends Component {
     }
 
     componentDidMount() {
-        console.log('componentdidmount')
-        console.log(this.props.articleForm.articleId)
+        for (let formIdentifier in this.props.articleForm) {
+            console.log(formIdentifier+":"+this.props.articleForm[formIdentifier])
+        }
     }
 
     componentWillMount() {
-        console.log('componentWillMount')
-        console.log(this.props.loading)
         this.props.onFetchArticle(this.props.articleForm.articleId);
     }
 
@@ -97,7 +96,8 @@ class ArticleDetail extends Component {
                 formData[formIdentifier] = this.props.articleForm[formIdentifier];
             }
         }
-        this.props.onCreateArticle(formData);
+        formData['userId'] = this.props.userId;
+        this.props.onCreateArticle(formData, this.props.token);
     };
 
     updateArticleHandler = () => {
@@ -105,15 +105,12 @@ class ArticleDetail extends Component {
         for (let formIdentifier in this.props.articleForm) {
             formData[formIdentifier] = this.props.articleForm[formIdentifier];
         }
-        console.log('update handler')
-        console.log(formData)
         this.props.onUpdateArticle(formData);
     }
 
     inputChangeHandler = (event) => {
         const targetName = event.target.name;
         const targetValue = event.target.value;
-
         const updatedValidationElement = {
             ...this.state.validation[targetName],
             valid: checkValidity(targetValue, this.state.validation[targetName]),
@@ -123,9 +120,6 @@ class ArticleDetail extends Component {
             ...this.state.validation,
             [targetName] : updatedValidationElement
         }
-        console.log('input change')
-        console.log(this.props.articleForm.content);
-        console.log(isNotNull(this.props.articleForm.content));
         this.setState({validation: updatedValidation});
         this.props.onInputChange(targetName, targetValue);
     }
@@ -221,13 +215,15 @@ const mapStateToProps = state => {
         horizontal: state.ui.snackbar.horizontal,
         vertical: state.ui.snackbar.vertical,
         loading: state.article.loading,
-        formIsValid: state.article.formIsValid
+        formIsValid: state.article.formIsValid,
+        token: state.auth.token,
+        userId: state.auth.userId
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onCreateArticle: (articleData) => dispatch(actions.createArticle(articleData)),
+        onCreateArticle: (articleData, token) => dispatch(actions.createArticle(articleData, token)),
         onInputChange: (name, value) => dispatch(actions.changeArticleContent(name, value)),
         onInitEditor: (editor) => dispatch(actions.initEditor(editor)),
         onEditClicked: () => dispatch(actions.enableEdit()),
