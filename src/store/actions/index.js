@@ -18,3 +18,9 @@ export {
     openDialog,
     closeDialog
 } from './uiComponents';
+
+export {
+    auth,
+    authCheckState,
+    logout
+} from './auth';

@@ -13,3 +13,10 @@ export const isNull = (value) => {
 export const isNotNull = (value) => {
     return value !== null && value !== "" && value !== undefined;
 }
+
+export const updateObject = (oldObject, updatedProperties) => {
+    return {
+        ...oldObject,
+        ...updatedProperties
+    }
+};

@@ -9,7 +9,6 @@ import {CKEditor} from "@ckeditor/ckeditor5-react";
 import Snackbar from '@material-ui/core/Snackbar';
 import {NavLink} from "react-router-dom";
 
-
 import * as actions from '../../store/actions/index';
 import Aux from '../../hoc/Auxiliary';
 import Progress from "../../components/UI/Progress/Progress";

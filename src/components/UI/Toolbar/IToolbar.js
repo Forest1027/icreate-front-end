@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#660033',
         color: 'white',
         width: 80,
-        height: '100%'
+        height: 60
     },
     link: {
         textDecoration: 'none'
@@ -44,9 +44,12 @@ const IToolbar = (props) => {
     const navButtons = (
         <Box className={classes.buttonRoot} display="flex" justifyContent="flex-end">
             {
-                Object.keys(props.navItems).map(btnName => (
-                    <NavLink className={classes.link} to={props.navItems[btnName].url} key={btnName}><Button className={classes.button} variant="contained">{btnName}</Button></NavLink>
-                ))
+                Object.keys(props.navItems).map(btnName => {
+                    const shouldShow = props.navItems[btnName].isAuth ? props.isAuth : !props.isAuth;
+                    return shouldShow ? (
+                        <NavLink className={classes.link} to={props.navItems[btnName].url} key={btnName}><Button
+                            className={classes.button} variant="contained">{btnName}</Button></NavLink>) : null
+                })
             }
         </Box>
     );
