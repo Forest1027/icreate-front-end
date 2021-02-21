@@ -22,9 +22,7 @@ const styles = theme => ({
             margin: theme.spacing(2),
         },
     },
-    title: {
-        width: '25ch',
-    },
+
     margin: {
         margin: theme.spacing(1),
     },
@@ -53,7 +51,11 @@ const styles = theme => ({
     link: {
         textDecoration: 'none'
     },
-
+    '@media (min-width:550px)' : {
+        title: {
+            width: '25ch',
+        },
+    }
 });
 
 class ArticleDetail extends Component {
