@@ -1,34 +1,54 @@
 import * as actionTypes from '../actions/actionTypes';
+import {isNotNull} from "../../shared/utility";
 
 const initialState = {
     articleForm: {
-        articleId:'',
+        articleId: '',
         title: '',
         description: '',
         content: ''
     },
     articles: [],
+    displayArticles: [],
+    pagination: {
+        count: 0,
+        page: 1,
+        size: 12
+    },
     readOnly: false,
     editor: null,
-    loading: false
+    loading: false,
+    formIsValid: false
 }
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case actionTypes.PAGINATION_DISPLAY_ARTICLES:
+            const page = action.page;
+            const size = state.pagination.size
+            return {
+                ...state,
+                pagination: {
+                    ...state.pagination,
+                    count: Math.ceil(state.articles.length / size),
+                    page: page
+                },
+                displayArticles: state.articles.filter((value, index) => {
+                    return (index <= page * size - 1 && index >= (page - 1) * size)
+                })
+            };
         case actionTypes.CLEAR_ARTICLE:
-            console.log('clear')
             return {
                 ...state,
                 articleForm: {
-                    articleId:'',
+                    articleId: '',
                     title: '',
                     description: '',
                     content: ''
                 }
             }
         case actionTypes.ENABLE_EDIT:
-            console.log('edit')
-            if(state.editor !== null) {
+            if (state.editor !== null) {
                 state.editor.isReadOnly = false
             }
             return {
@@ -51,7 +71,8 @@ const reducer = (state = initialState, action) => {
             articleForm[action.attrName] = action.attrValue;
             return {
                 ...state,
-                articleForm: articleForm
+                articleForm: articleForm,
+                formIsValid: (isNotNull(articleForm.title) && isNotNull(articleForm.description) && isNotNull(articleForm.content))
             }
         case actionTypes.CREATE_ARTICLE_START:
             return {
@@ -77,8 +98,6 @@ const reducer = (state = initialState, action) => {
                 loading: true
             };
         case actionTypes.FETCH_ARTICLES_SUCCESS:
-            console.log(actionTypes.FETCH_ARTICLES_SUCCESS);
-            console.log(action.articles)
             return {
                 ...state,
                 articles: action.articles,
@@ -86,17 +105,26 @@ const reducer = (state = initialState, action) => {
             }
         case actionTypes.FETCH_ARTICLES_FAIL:
             return {...state};
-        case actionTypes.FETCH_ARTICLE_SUCCESS:
-            console.log(actionTypes.FETCH_ARTICLE_SUCCESS)
-            console.log(action.articleId)
-            console.log(action.article)
-            if(action.article !== null) {
-                action.article['articleId'] = action.articleId;
+        case actionTypes.SET_ARTICLE_ID:
+            return {
+                ...state,
+                articleForm: {
+                    articleId: action.id
+                }
             }
+        case actionTypes.FETCH_ARTICLE_START:
+            return {
+                ...state,
+                loading: true,
+
+            }
+        case actionTypes.FETCH_ARTICLE_SUCCESS:
+            action.article['articleId'] = action.articleId;
             return {
                 ...state,
                 articleForm: action.article,
-                loading: false
+                loading: false,
+                formIsValid: isNotNull(action.article.title) && isNotNull(action.article.description) && isNotNull(action.article.content)
             }
         case actionTypes.UPDATE_ARTICLE_SUCCESS:
             return {
@@ -111,7 +139,9 @@ const reducer = (state = initialState, action) => {
         case actionTypes.DELETE_ARTICLE_SUCCESS:
             return {
                 ...state,
-                loading: false
+                loading: false,
+                articles: state.articles.filter((article) => article.articleId !== action.id),
+                displayArticles: state.displayArticles.filter((article) => article.articleId !== action.id)
             }
         default:
             return state;

@@ -8,7 +8,9 @@ export {
     fetchArticle,
     goToCreateArticle,
     updateArticle,
-    deleteArticle
+    deleteArticle,
+    paginationDisplayArticles,
+    setArticleId
 } from './article';
 
 export {
@@ -16,3 +18,9 @@ export {
     openDialog,
     closeDialog
 } from './uiComponents';
+
+export {
+    auth,
+    authCheckState,
+    logout
+} from './auth';

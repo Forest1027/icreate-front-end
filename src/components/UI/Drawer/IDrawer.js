@@ -46,12 +46,15 @@ const IDrawer = (props) => {
     const navListItems = (
         <Aux>
             {
-                Object.keys(props.navItems).map(btnName => (
-                    <ListItem button key={btnName}>
-                        <ListItemIcon>{listIcon(props.navItems[btnName].icon)}</ListItemIcon>
-                        <NavLink className={classes.link} to={props.navItems[btnName].url}><ListItemText primary={btnName}/></NavLink>
-                    </ListItem>
-                ))
+                Object.keys(props.navItems).map(btnName => {
+                    const shouldShow = props.navItems[btnName].isAuth ? props.isAuth : !props.isAuth;
+                    return shouldShow ? (
+                        <ListItem button key={btnName}>
+                            <ListItemIcon>{listIcon(props.navItems[btnName].icon)}</ListItemIcon>
+                            <NavLink className={classes.link} to={props.navItems[btnName].url}><ListItemText
+                                primary={btnName}/></NavLink>
+                        </ListItem>) : null
+                })
             }
         </Aux>
     );

@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {connect} from 'react-redux';
 import IToolbar from "../../components/UI/Toolbar/IToolbar";
 import IDrawer from "../../components/UI/Drawer/IDrawer";
 import * as layoutConstants from "../../constants/LayoutConstants";
@@ -18,12 +19,12 @@ class Layout extends Component{
                 "icon":layoutConstants.MY_PROFILE_ICON
             },
             "Login" : {
-                "isAuth":true,
+                "isAuth":false,
                 "url":layoutConstants.LOGIN_URL,
                 "icon":layoutConstants.LOGIN_ICON
             },
             "Signup" : {
-                "isAuth":true,
+                "isAuth":false,
                 "url":layoutConstants.SIGNUP_URL,
                 "icon":layoutConstants.SIGNUP_ICON
             },
@@ -33,6 +34,14 @@ class Layout extends Component{
                 "icon":layoutConstants.LOGOUT_ICON
             }
         }
+    }
+
+    isAuthenticated = !localStorage.getItem('token');
+
+    componentDidMount() {
+        console.log('layout')
+        console.log(this.props.isAuthenticated)
+        console.log(this.state)
     }
 
     drawerCloseHandler = () => {
@@ -46,7 +55,7 @@ class Layout extends Component{
     render() {
         return (
             <div>
-                <IToolbar open={this.drawerOpenHandler} navItems={this.state.navItems}/>
+                <IToolbar open={this.drawerOpenHandler} navItems={this.state.navItems} isAuth={this.props.isAuthenticated}/>
                 <IDrawer status={this.state.showDrawer} close={this.drawerCloseHandler} navItems={this.state.navItems}/>
                 <main>
                     {this.props.children}
@@ -57,4 +66,10 @@ class Layout extends Component{
 
 }
 
-export default Layout;
+const mapStateToProps = state => {
+    return {
+        isAuthenticated: state.auth.token != null
+    }
+}
+
+export default connect(mapStateToProps)(Layout);

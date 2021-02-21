@@ -62,7 +62,7 @@ const ArticleItems = (props) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onArticleClicked: (id) => dispatch(actions.fetchArticle(id)),
+        onArticleClicked: (id) => dispatch(actions.setArticleId(id)),
         onDeleteClicked: (id) => dispatch(actions.openDialog(id))
     }
 };

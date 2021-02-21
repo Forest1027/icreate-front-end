@@ -1,7 +1,8 @@
 import * as actionTypes from './actionTypes';
-import {databaseRef} from "../../database";
 import {openSnackbar, closeDialog, closeSnackbar} from "./uiComponents";
 
+import axios from "./../../axios-url";
+import {isNotNull} from "../../shared/utility";
 
 export const enableEdit = () => {
     return {
@@ -23,6 +24,8 @@ export const initEditor = (editor) => {
 };
 
 export const changeArticleContent = (name, value) => {
+    console.log('change article content')
+    console.log(name, value)
     return {
         type: actionTypes.CHANGE_ARTICLE_CONTENT,
         attrName: name,
@@ -30,10 +33,9 @@ export const changeArticleContent = (name, value) => {
     }
 }
 
-export const createArticleSuccess = (name) => {
+export const createArticleSuccess = () => {
     return {
         type: actionTypes.CREATE_ARTICLE_SUCCESS,
-        articleId: name
     }
 };
 
@@ -50,25 +52,21 @@ export const createArticleStart = () => {
     }
 };
 
-export const createArticle = (articleData) => {
+export const createArticle = (articleData, token) => {
     return dispatch => {
         dispatch(closeSnackbar());
         dispatch(createArticleStart());
-        let newarticleRef = databaseRef.ref('articles/').push();
-        console.log('push')
-        console.log(newarticleRef.key)
-        articleData.articleId = newarticleRef.key
-        newarticleRef.set(articleData, error => {
-            if (error) {
-                dispatch(createArticleFail(error));
-            } else {
-                console.log('res');
-                console.log(newarticleRef)
-                dispatch(createArticleSuccess(newarticleRef.key));
-                dispatch(openSnackbar());
+        console.log('create article')
+        console.log(articleData)
+        axios.post('/articles.json?auth='+token, articleData)
+            .then(response => {
+                articleData['articleId'] = response.data.name;
+                dispatch(createArticleSuccess());
                 dispatch(disableEdit());
-            }
+            }).catch(error => {
+            dispatch(createArticleFail(error));
         });
+
     }
 }
 
@@ -92,23 +90,24 @@ export const fetchArticlesStart = () => {
     }
 };
 
-export const fetchArticles = () => {
+export const fetchArticles = (token, userId) => {
     return dispatch => {
-        console.log(actionTypes.FETCH_ARTICLES)
         dispatch(fetchArticlesStart());
-        const ref = databaseRef.ref('articles');
-        ref.on('value', (snapshot) => {
-            const res = snapshot.val();
-            const fetchedArticles = [];
-            for (let key in res) {
-                fetchedArticles.push({
-                    ...res[key],
-                    articleId: key
-                });
+        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId+'"';
+        axios.get('/articles.json'+queryParams).then(
+            res => {
+                const fetchedArticles = [];
+                for (let key in res.data) {
+                    fetchedArticles.push({
+                        ...res.data[key],
+                        articleId:key
+                    });
+                }
+                dispatch(fetchArticlesSuccess(fetchedArticles));
+                dispatch(paginationDisplayArticles(1));
             }
-            console.log('action')
-            console.log(fetchedArticles)
-            dispatch(fetchArticlesSuccess(fetchedArticles));
+        ).catch(err => {
+            dispatch(fetchArticlesFail(err));
         })
     }
 };
@@ -134,18 +133,27 @@ export const fetchArticleStart = () => {
     }
 };
 
+export const setArticleId = (articleId) => {
+    return {
+        type: actionTypes.SET_ARTICLE_ID,
+        id: articleId
+    }
+}
+
 export const fetchArticle = (articleId) => {
     return dispatch => {
-        console.log(actionTypes.FETCH_ARTICLE)
         dispatch(closeSnackbar());
         dispatch(enableEdit());
-        dispatch(fetchArticleStart());
-        console.log('fetch article')
-        console.log(articleId)
-        databaseRef.ref('articles/' + articleId).on('value', snapshot => {
-            console.log('action '+actionTypes.FETCH_ARTICLE_SUCCESS)
-            dispatch(fetchArticleSuccess(snapshot.val(), articleId));
-        })
+        if(isNotNull(articleId)) {
+            dispatch(fetchArticleStart());
+            axios.get(`/articles/${articleId}.json`).then(
+                res => {
+                    dispatch(fetchArticleSuccess(res.data, articleId));
+                }
+            ).catch(err => {
+                dispatch(fetchArticlesFail(err));
+            })
+        }
     }
 }
 
@@ -158,7 +166,6 @@ export const goToCreateArticle = () => {
 }
 
 export const clearArticle = () => {
-    console.log('clear action')
     return {
         type: actionTypes.CLEAR_ARTICLE
     }
@@ -187,36 +194,32 @@ export const updateArticleStart = () => {
 export const updateArticle = (articleData) => {
     return dispatch => {
         dispatch(updateArticleStart());
-        console.log('update')
-        console.log(articleData.articleId)
-        databaseRef.ref('articles/' + articleData.articleId).set(articleData, error => {
-            if (error) {
-                dispatch(updateArticleFail(error));
-            } else {
+        axios.patch(`/articles/${articleData.articleId}.json`, articleData).then(
+            () => {
                 dispatch(updateArticleSuccess(articleData));
                 dispatch(openSnackbar());
                 dispatch(disableEdit());
             }
-        });
+        ).catch(err => {
+            dispatch(updateArticleFail(err));
+        })
     }
 }
 
 export const deleteArticleStart = () => {
-    console.log(actionTypes.DELETE_ARTICLE_START)
     return {
         type: actionTypes.DELETE_ARTICLE_START
     }
 }
 
-export const deleteArticleSuccess = () => {
-    console.log(actionTypes.DELETE_ARTICLE_SUCCESS)
+export const deleteArticleSuccess = (articleId) => {
     return {
-        type: actionTypes.DELETE_ARTICLE_SUCCESS
+        type: actionTypes.DELETE_ARTICLE_SUCCESS,
+        id: articleId
     }
 }
 
 export const deleteArticleFail = (error) => {
-    console.log(actionTypes.DELETE_ARTICLE_FAIL)
     return {
         type: actionTypes.DELETE_ARTICLE_FAIL,
         error: error
@@ -225,16 +228,22 @@ export const deleteArticleFail = (error) => {
 
 export const deleteArticle = (articleId) => {
     return dispatch => {
-        console.log(actionTypes.DELETE_ARTICLE)
         deleteArticleStart();
-        databaseRef.ref("articles/"+articleId).set(null, error => {
-            if(error) {
-                dispatch(deleteArticleFail(error));
-            }else {
-                dispatch(deleteArticleSuccess());
+        axios.delete(`/articles/${articleId}.json`).then(
+            () => {
+                dispatch(deleteArticleSuccess(articleId));
                 dispatch(closeDialog());
             }
-        });
+        ).catch(err => {
+            dispatch(deleteArticleFail(err));
+        })
     };
+}
+
+export const paginationDisplayArticles = (pageNum) => {
+    return {
+        type : actionTypes.PAGINATION_DISPLAY_ARTICLES,
+        page: pageNum
+    }
 }
 

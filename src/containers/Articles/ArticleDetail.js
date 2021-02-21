@@ -9,11 +9,10 @@ import {CKEditor} from "@ckeditor/ckeditor5-react";
 import Snackbar from '@material-ui/core/Snackbar';
 import {NavLink} from "react-router-dom";
 
-
 import * as actions from '../../store/actions/index';
 import Aux from '../../hoc/Auxiliary';
 import Progress from "../../components/UI/Progress/Progress";
-import {checkValidity, isNotNull} from "../../shared/utility";
+import {checkValidity} from "../../shared/utility";
 
 
 const styles = theme => ({
@@ -22,9 +21,7 @@ const styles = theme => ({
             margin: theme.spacing(2),
         },
     },
-    title: {
-        width: '25ch',
-    },
+
     margin: {
         margin: theme.spacing(1),
     },
@@ -53,7 +50,11 @@ const styles = theme => ({
     link: {
         textDecoration: 'none'
     },
-
+    '@media (min-width:550px)' : {
+        title: {
+            width: '25ch',
+        },
+    }
 });
 
 class ArticleDetail extends Component {
@@ -79,12 +80,13 @@ class ArticleDetail extends Component {
     }
 
     componentDidMount() {
-        console.log('componentdidmount')
-        console.log(this.props.articleForm.articleId)
+        for (let formIdentifier in this.props.articleForm) {
+            console.log(formIdentifier+":"+this.props.articleForm[formIdentifier])
+        }
     }
 
     componentWillMount() {
-        this.setState({formIsValid : isNotNull(this.props.articleForm.title) && isNotNull(this.props.articleForm.description) && isNotNull(this.props.articleForm.content)});
+        this.props.onFetchArticle(this.props.articleForm.articleId);
     }
 
     createArticleHandler = () => {
@@ -94,7 +96,8 @@ class ArticleDetail extends Component {
                 formData[formIdentifier] = this.props.articleForm[formIdentifier];
             }
         }
-        this.props.onCreateArticle(formData);
+        formData['userId'] = this.props.userId;
+        this.props.onCreateArticle(formData, this.props.token);
     };
 
     updateArticleHandler = () => {
@@ -102,15 +105,12 @@ class ArticleDetail extends Component {
         for (let formIdentifier in this.props.articleForm) {
             formData[formIdentifier] = this.props.articleForm[formIdentifier];
         }
-        console.log('update handler')
-        console.log(formData)
         this.props.onUpdateArticle(formData);
     }
 
     inputChangeHandler = (event) => {
         const targetName = event.target.name;
         const targetValue = event.target.value;
-        this.props.onInputChange(targetName, targetValue);
         const updatedValidationElement = {
             ...this.state.validation[targetName],
             valid: checkValidity(targetValue, this.state.validation[targetName]),
@@ -120,29 +120,20 @@ class ArticleDetail extends Component {
             ...this.state.validation,
             [targetName] : updatedValidationElement
         }
-        console.log('input change')
-        console.log(this.props.articleForm.content);
-        console.log(isNotNull(this.props.articleForm.content));
-        this.setState({validation: updatedValidation, formIsValid: (isNotNull(this.props.articleForm.title) && isNotNull(this.props.articleForm.description) && isNotNull(this.props.articleForm.content))});
+        this.setState({validation: updatedValidation});
+        this.props.onInputChange(targetName, targetValue);
     }
 
     editorInputChangeHandler = (event, editor) => {
         const data = editor.getData();
         this.props.onInputChange('content', data);
-        this.setState({formIsValid: (isNotNull(this.props.articleForm.title) && isNotNull(this.props.articleForm.description) && isNotNull(this.props.articleForm.content))});
     }
 
     render() {
         const {classes} = this.props;
-        return (
-            <Box justifyContent="center" display="flex" flexWrap='wrap'>
-                <Progress loading={this.props.loading}/>
-                <Snackbar
-                    anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                    open={this.props.open}
-                    onClose={this.props.onCloseSnackbar}
-                    message="Congratulations! Your changes have been saved."
-                />
+        let articleDetail = <Progress loading/>;
+        if(!this.props.loading) {
+            articleDetail = (
                 <Box justifyContent="flex-start" width='80%'>
                     <form className={classes.root} noValidate autoComplete="off" onSubmit={this.createArticleHandler}>
                         <Box className={classes.buttonBox}>
@@ -153,14 +144,14 @@ class ArticleDetail extends Component {
                                     this.props.articleForm.articleId !== '' ?
                                         (<Aux>
                                             <Button className={classes.editButton} variant="contained"
-                                                    onClick={this.updateArticleHandler} disabled={!this.state.formIsValid}>Update</Button>
+                                                    onClick={this.updateArticleHandler} disabled={!this.props.formIsValid}>Update</Button>
                                             <Button className={classes.cancelButton}
                                                     variant="outlined"
                                                     onClick={this.props.onUpdateCancelClicked}>Cancel</Button>
                                         </Aux>)
                                         : (<Aux>
                                             <Button className={classes.editButton} variant="contained"
-                                                    onClick={this.createArticleHandler} disabled={!this.state.formIsValid}>Create</Button>
+                                                    onClick={this.createArticleHandler} disabled={!this.props.formIsValid}>Create</Button>
                                             <NavLink className={classes.link} to='/articles'> <Button
                                                 className={classes.cancelButton}
                                                 variant="outlined">Cancel</Button></NavLink>
@@ -200,6 +191,17 @@ class ArticleDetail extends Component {
                         </Box>
                     </form>
                 </Box>
+            );
+        }
+        return (
+            <Box justifyContent="center" display="flex" flexWrap='wrap'>
+                <Snackbar
+                    anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                    open={this.props.open}
+                    onClose={this.props.onCloseSnackbar}
+                    message="Congratulations! Your changes have been saved."
+                />
+                {articleDetail}
             </Box>);
     }
     ;
@@ -212,19 +214,23 @@ const mapStateToProps = state => {
         open: state.ui.snackbar.open,
         horizontal: state.ui.snackbar.horizontal,
         vertical: state.ui.snackbar.vertical,
-        loading: state.article.loading
+        loading: state.article.loading,
+        formIsValid: state.article.formIsValid,
+        token: state.auth.token,
+        userId: state.auth.userId
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onCreateArticle: (articleData) => dispatch(actions.createArticle(articleData)),
+        onCreateArticle: (articleData, token) => dispatch(actions.createArticle(articleData, token)),
         onInputChange: (name, value) => dispatch(actions.changeArticleContent(name, value)),
         onInitEditor: (editor) => dispatch(actions.initEditor(editor)),
         onEditClicked: () => dispatch(actions.enableEdit()),
         onUpdateCancelClicked: () => dispatch(actions.disableEdit()),
         onUpdateArticle: (articleData) => dispatch(actions.updateArticle(articleData)),
         onCloseSnackbar: () => dispatch(actions.closeSnackbar()),
+        onFetchArticle: (articleId) => dispatch(actions.fetchArticle(articleId))
     }
 };
 
