@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import CredentialForm from "../../components/Auth/CredentialForm";
-import {updateObject} from "../../shared/utility";
+import {checkValidity, updateObject} from "../../shared/utility";
 import * as actions from "../../store/actions";
 import Progress from "../../components/UI/Progress/Progress";
 import {Redirect} from "react-router-dom";
@@ -9,56 +9,81 @@ import Aux from "../../hoc/Auxiliary";
 
 class Signup extends Component {
     state = {
-        email: {
-            value: '',
-            type: 'email',
-            name: 'email',
-            display: 'Email',
-            placeholder: 'Your Email',
-            validation: {
-                required: true,
-                isEmail: true
+        element: {
+            email: {
+                value: '',
+                type: 'email',
+                name: 'email',
+                display: 'Email',
+                placeholder: 'Your Email',
+                touched: false,
+                valid: false,
+                helpText: '',
+                validation: {
+                    required: true,
+                    isEmail: true,
+                }
+            },
+            password: {
+                value: '',
+                type: 'password',
+                name: 'password',
+                display: 'Password',
+                placeholder: 'Your Password',
+                touched: false,
+                valid: false,
+                helpText: '',
+                validation: {
+                    required: true,
+                }
+            },
+            confirmPassword: {
+                value: '',
+                type: 'password',
+                name: 'confirmPassword',
+                display: 'Confirm Password',
+                placeholder: 'Confirm Password',
+                touched: false,
+                valid: false,
+                helpText: '',
+                validation: {
+                    required: true,
+                    sameAsPassword: true
+                }
             }
         },
-        password: {
-            value: '',
-            type: 'password',
-            name: 'password',
-            display: 'Password',
-            placeholder: 'Your Password',
-            validation: {
-                required: true,
-            }
-        },
-        confirmPassword: {
-            value: '',
-            type: 'password',
-            name: 'confirmPassword',
-            display: 'Confirm Password',
-            placeholder: 'Confirm Password',
-            validation: {
-                required: true,
-            }
-        }
+        formIsValid: false
     };
 
     onInputChangeHandler = (event) => {
-        const type = event.target.name;
+        const name = event.target.name;
         const inputVal = event.target.value;
-        const updatedObj = updateObject(this.state, {
-            [type]: updateObject(this.state[type], {value: inputVal})
+        const errorArr = checkValidity(inputVal, this.state.element[name].validation, this.state.element['password'].value)
+        const helpText = errorArr.join(', ');
+        const updatedObj = updateObject(this.state.element, {
+            [name]: updateObject(this.state.element[name], {
+                value: inputVal,
+                touched: true,
+                valid: errorArr.length===0,
+                helpText: helpText
+            })
         });
-        this.setState(updatedObj);
+        let formValid = false;
+        for (let key in updatedObj) {
+            formValid = updatedObj[key].valid
+        }
+        this.setState({
+            element: updatedObj,
+            formIsValid: formValid});
     };
 
     onSubmitHandler = () => {
-        console.log(this.state)
         this.props.onSubmit(this.state.email.value, this.state.password.value);
     };
 
     render() {
         let form = (<CredentialForm changed={this.onInputChangeHandler} submitted={this.onSubmitHandler}
-                                    formData={this.state}/>);
+                                    formData={this.state.element} formValid={this.state.formIsValid}/>);
         if (this.props.loading) {
             form = <Progress loading/>;
         }

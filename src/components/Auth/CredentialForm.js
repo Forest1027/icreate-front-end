@@ -53,20 +53,22 @@ const CredentialForm = (props) => {
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <TextField
-                                        id="outlined-required"
+                                        id={props.formData[fieldName].name}
                                         label={props.formData[fieldName].placeholder}
                                         variant="outlined"
                                         className={classes.inputClass}
                                         onChange={props.changed}
                                         name={props.formData[fieldName].name}
                                         type={props.formData[fieldName].type}
+                                        error={!props.formData[fieldName].valid && props.formData[fieldName].touched}
+                                        helperText={(!props.formData[fieldName].valid && props.formData[fieldName].touched)?props.formData[fieldName].helpText:""}
                                     />
                                 </Grid>
                             </Grid>
                         </Box>
                     ))}
                     <Box>
-                        <Button className={classes.submitButton} variant="contained" onClick={props.submitted}
+                        <Button className={classes.submitButton} variant="contained" onClick={props.submitted} disabled={!props.formValid}
                                 >Submit</Button>
                     </Box>
                 </Box>

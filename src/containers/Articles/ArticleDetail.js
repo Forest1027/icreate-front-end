@@ -79,12 +79,6 @@ class ArticleDetail extends Component {
         formIsValid : false
     }
 
-    componentDidMount() {
-        for (let formIdentifier in this.props.articleForm) {
-            console.log(formIdentifier+":"+this.props.articleForm[formIdentifier])
-        }
-    }
-
     componentWillMount() {
         this.props.onFetchArticle(this.props.articleForm.articleId);
     }
@@ -113,7 +107,7 @@ class ArticleDetail extends Component {
         const targetValue = event.target.value;
         const updatedValidationElement = {
             ...this.state.validation[targetName],
-            valid: checkValidity(targetValue, this.state.validation[targetName]),
+            valid: checkValidity(targetValue, this.state.validation[targetName]).length === 0,
             touched: true
         }
         const updatedValidation = {
