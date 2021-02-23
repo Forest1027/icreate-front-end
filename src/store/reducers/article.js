@@ -40,8 +40,10 @@ const reducer = (state = initialState, action) => {
                     count: Math.ceil(state.articles.length / size),
                     page: page
                 },
-                displayArticles: state.articles.filter((value, index) => {
-                    return (index <= page * size - 1 && index >= (page - 1) * size) && (state.searchStr === '' ? true : value.title.includes(state.searchStr));
+                displayArticles: state.articles.filter((value) => {
+                    return state.searchStr === '' ? true : value.title.includes(state.searchStr);
+                }).filter((value, index) => {
+                    return index <= page * size - 1 && index >= (page - 1) * size;
                 }),
             };
         case actionTypes.CLEAR_ARTICLE:
