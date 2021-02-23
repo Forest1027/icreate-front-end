@@ -13,11 +13,12 @@ class Layout extends Component{
                 "url":layoutConstants.MY_ARTICLE_URL,
                 "icon":layoutConstants.MY_ARTICLE_ICON
             },
-            "My Profile" : {
-                "isAuth":true,
-                "url":layoutConstants.MY_PROFILE_URL,
-                "icon":layoutConstants.MY_PROFILE_ICON
-            },
+            // future feature
+            // "My Profile" : {
+            //     "isAuth":true,
+            //     "url":layoutConstants.MY_PROFILE_URL,
+            //     "icon":layoutConstants.MY_PROFILE_ICON
+            // },
             "Login" : {
                 "isAuth":false,
                 "url":layoutConstants.LOGIN_URL,

@@ -23,7 +23,18 @@ const styles = () => ({
 class ArticleScreen extends Component {
 
     componentDidMount() {
+        this.props.onSearchInputChange('');
         this.props.onFetchArticles(this.props.token, this.props.userId);
+    }
+
+    searchInputChangeHandler = (event) => {
+        const searchStr = event.target.value;
+        this.props.onSearchInputChange(searchStr);
+        setTimeout(() => {
+            if(searchStr === this.props.search) {
+                this.props.onChangePage(this.props.currentPage);
+            }
+        },500);
     }
 
     render() {
@@ -32,7 +43,7 @@ class ArticleScreen extends Component {
             <Box>
                 <Box display="flex">
                     <Box width='100%'>
-                        <SearchAddGrid/>
+                        <SearchAddGrid changed={this.searchInputChangeHandler}/>
                     </Box>
                 </Box>
                 <Progress loading={this.props.loading}/>
@@ -69,7 +80,9 @@ const mapStateToProps = state => {
         displayArticles: state.article.displayArticles,
         count: state.article.pagination.count,
         token: state.auth.token,
-        userId: state.auth.userId
+        userId: state.auth.userId,
+        search: state.article.searchStr,
+        currentPage: state.article.currentPage
     }
 };
 
@@ -79,6 +92,7 @@ const mapDispatchToProps = dispatch => {
         onCloseDialog: () => dispatch(actions.closeDialog()),
         onDeleteArticle: (id) => dispatch(actions.deleteArticle(id)),
         onChangePage: (pageNum) => dispatch(actions.paginationDisplayArticles(pageNum)),
+        onSearchInputChange: (searchStr) => dispatch(actions.setSearchInput(searchStr))
     }
 };
 

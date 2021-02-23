@@ -54,7 +54,7 @@ export const createArticle = (articleData, token) => {
     return dispatch => {
         dispatch(closeSnackbar());
         dispatch(createArticleStart());
-        axios.post('/articles.json?auth='+token, articleData)
+        axios.post('/articles.json?auth=' + token, articleData)
             .then(response => {
                 articleData['articleId'] = response.data.name;
                 dispatch(createArticleSuccess());
@@ -89,14 +89,14 @@ export const fetchArticlesStart = () => {
 export const fetchArticles = (token, userId) => {
     return dispatch => {
         dispatch(fetchArticlesStart());
-        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId+'"';
-        axios.get('/articles.json'+queryParams).then(
+        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
+        axios.get('/articles.json' + queryParams).then(
             res => {
                 const fetchedArticles = [];
                 for (let key in res.data) {
                     fetchedArticles.push({
                         ...res.data[key],
-                        articleId:key
+                        articleId: key
                     });
                 }
                 dispatch(fetchArticlesSuccess(fetchedArticles));
@@ -140,7 +140,7 @@ export const fetchArticle = (articleId) => {
     return dispatch => {
         dispatch(closeSnackbar());
         dispatch(enableEdit());
-        if(isNotNull(articleId)) {
+        if (isNotNull(articleId)) {
             dispatch(fetchArticleStart());
             axios.get(`/articles/${articleId}.json`).then(
                 res => {
@@ -238,8 +238,15 @@ export const deleteArticle = (articleId) => {
 
 export const paginationDisplayArticles = (pageNum) => {
     return {
-        type : actionTypes.PAGINATION_DISPLAY_ARTICLES,
+        type: actionTypes.PAGINATION_DISPLAY_ARTICLES,
         page: pageNum
+    }
+}
+
+export const setSearchInput = (search) => {
+    return {
+        type: actionTypes.SET_SEARCH_INPUT,
+        searchStr: search
     }
 }
 

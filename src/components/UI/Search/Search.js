@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Search = () => {
+const Search = (props) => {
     const classes = useStyles();
     return (
         <Grid item className={classes.search} sm={6} xs={6}>
@@ -50,12 +50,13 @@ const Search = () => {
                 <SearchIcon/>
             </div>
             <InputBase
-                placeholder="Search…"
+                placeholder="Search by title…"
                 classes={{
                     root: classes.inputRoot,
                     input: classes.inputInput,
                 }}
                 inputProps={{'aria-label': 'search'}}
+                onChange={props.changed}
             />
         </Grid>
     )

@@ -10,7 +10,8 @@ export {
     updateArticle,
     deleteArticle,
     paginationDisplayArticles,
-    setArticleId
+    setArticleId,
+    setSearchInput
 } from './article';
 
 export {
