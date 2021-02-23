@@ -38,12 +38,6 @@ class Layout extends Component{
 
     isAuthenticated = !localStorage.getItem('token');
 
-    componentDidMount() {
-        console.log('layout')
-        console.log(this.props.isAuthenticated)
-        console.log(this.state)
-    }
-
     drawerCloseHandler = () => {
         this.setState({showDrawer : false});
     }

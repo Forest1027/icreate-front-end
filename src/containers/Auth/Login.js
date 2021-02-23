@@ -64,18 +64,10 @@ class Login extends Component {
     };
 
     onSubmitHandler = () => {
-        console.log(this.state)
         this.props.onSubmit(this.state.element.email.value, this.state.element.password.value);
     };
 
-    componentDidMount() {
-        console.log('login component did mount')
-    }
-
     render() {
-        console.log('login rendering')
-        console.log('loading:' +this.props.loading)
-        console.log('authenticated'+this.props.isAuthenticated)
         let form = (<CredentialForm changed={this.onInputChangeHandler} submitted={this.onSubmitHandler}
                                     formData={this.state.element} formValid={this.state.formIsValid}/>);
         if(this.props.loading) {

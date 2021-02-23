@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
-import {isNotNull} from "../../shared/utility";
+import {isNotNull, updateObject} from "../../shared/utility";
 
 const initialState = {
     articleForm: {
