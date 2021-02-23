@@ -1,9 +1,22 @@
-export const checkValidity = (value, identifier) => {
-    let isValid = true;
+export const checkValidity = (value, identifier, password) => {
+    let error = [];
     if(identifier.required) {
-        isValid = value.trim() !== '' && isValid;
+        if(value.trim() === '') {
+            error.push('Cannot be empty');
+        }
     }
-    return isValid;
+    if(identifier.isEmail) {
+        if(!(new RegExp('[A-Za-z0-9]+@[A-Za-z0-9.]+\\.[A-Za-z]{2,}')).test(value)) {
+            error.push('Should have email format');
+        }
+    }
+
+    if(identifier.sameAsPassword) {
+        if(value !== password) {
+            error.push('Should be the same as password');
+        }
+    }
+    return error;
 };
 
 export const isNull = (value) => {

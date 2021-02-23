@@ -47,7 +47,6 @@ export const auth = (email, password, isSignup) => {
             password: password,
             returnSecureToken: true
         }
-        console.log('auth')
         let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+process.env.REACT_APP_FIREBASE_API_KEY;
         if(!isSignup) {
             url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='+process.env.REACT_APP_FIREBASE_API_KEY;
@@ -77,10 +76,7 @@ export const setAuthRedirectPath = (path) => {
 
 export const authCheckState = () => {
     return dispatch => {
-        console.log('auto check')
-
         const token = localStorage.getItem('token');
-        console.log(token)
         if(!token) {
             dispatch(logout());
         }else {

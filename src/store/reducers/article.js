@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
-import {isNotNull} from "../../shared/utility";
+import {isNotNull, updateObject} from "../../shared/utility";
 
 const initialState = {
     articleForm: {
@@ -15,6 +15,8 @@ const initialState = {
         page: 1,
         size: 12
     },
+    searchStr: '',
+    currentPage: 1,
     readOnly: false,
     editor: null,
     loading: false,
@@ -23,19 +25,26 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case actionTypes.SET_SEARCH_INPUT:
+            return updateObject(state, {
+                searchStr: action.searchStr
+            })
         case actionTypes.PAGINATION_DISPLAY_ARTICLES:
             const page = action.page;
             const size = state.pagination.size
             return {
                 ...state,
+                currentPage: page,
                 pagination: {
                     ...state.pagination,
                     count: Math.ceil(state.articles.length / size),
                     page: page
                 },
-                displayArticles: state.articles.filter((value, index) => {
-                    return (index <= page * size - 1 && index >= (page - 1) * size)
-                })
+                displayArticles: state.articles.filter((value) => {
+                    return state.searchStr === '' ? true : value.title.includes(state.searchStr);
+                }).filter((value, index) => {
+                    return index <= page * size - 1 && index >= (page - 1) * size;
+                }),
             };
         case actionTypes.CLEAR_ARTICLE:
             return {

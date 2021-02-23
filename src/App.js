@@ -15,15 +15,8 @@ import * as actions from './store/actions/index';
 class App extends Component {
 
     constructor(props) {
-        console.log('constructor')
         super(props);
         this.props.onTryAutoSignup();
-        console.log('index')
-        console.log(this.props.isAuthenticated)
-    }
-    componentDidMount() {
-        console.log('component did mount')
-        console.log(this.props.isAuthenticated)
     }
 
     render() {

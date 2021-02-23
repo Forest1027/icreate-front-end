@@ -11,8 +11,6 @@ import {connect} from "react-redux";
 import Search from "./Search";
 import * as actions from "../../../store/actions";
 
-
-
 const useStyles = makeStyles((theme) => ({
 
     button: {
@@ -41,7 +39,7 @@ const SearchAddGrid = (props) => {
     const matches = useMediaQuery('(min-width: 600px)')
     return (
         <Grid container direction="row" justify="flex-start" alignItems="center">
-            <Search/>
+            <Search changed={props.changed}/>
             <Grid item sm={4} xs={3} className={classes.buttonGrid} onClick={props.onCreateClicked}>
                 {matches? (
                     <NavLink className={classes.link} to='/articleDetail'><Button variant="contained" className={classes.button}>Create</Button></NavLink>
