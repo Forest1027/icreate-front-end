@@ -1,7 +1,5 @@
 export const checkValidity = (value, identifier, password) => {
     let error = [];
-    console.log('check validity')
-    console.log(value, identifier, password)
     if(identifier.required) {
         if(value.trim() === '') {
             error.push('Cannot be empty');

@@ -24,8 +24,6 @@ export const initEditor = (editor) => {
 };
 
 export const changeArticleContent = (name, value) => {
-    console.log('change article content')
-    console.log(name, value)
     return {
         type: actionTypes.CHANGE_ARTICLE_CONTENT,
         attrName: name,
@@ -56,8 +54,6 @@ export const createArticle = (articleData, token) => {
     return dispatch => {
         dispatch(closeSnackbar());
         dispatch(createArticleStart());
-        console.log('create article')
-        console.log(articleData)
         axios.post('/articles.json?auth='+token, articleData)
             .then(response => {
                 articleData['articleId'] = response.data.name;

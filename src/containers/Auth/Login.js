@@ -65,7 +65,7 @@ class Login extends Component {
 
     onSubmitHandler = () => {
         console.log(this.state)
-        this.props.onSubmit(this.state.email.value, this.state.password.value);
+        this.props.onSubmit(this.state.element.email.value, this.state.element.password.value);
     };
 
     componentDidMount() {

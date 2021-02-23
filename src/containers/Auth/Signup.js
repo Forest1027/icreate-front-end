@@ -78,7 +78,7 @@ class Signup extends Component {
     };
 
     onSubmitHandler = () => {
-        this.props.onSubmit(this.state.email.value, this.state.password.value);
+        this.props.onSubmit(this.state.element.email.value, this.state.element.password.value);
     };
 
     render() {
