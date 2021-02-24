@@ -55,15 +55,13 @@ export const createArticle = (articleData, token) => {
         dispatch(closeSnackbar());
         dispatch(createArticleStart());
         axios.post('/articles.json?auth=' + token, articleData)
-            .then(response => {
-                articleData['articleId'] = response.data.name;
+            .then(() => {
                 dispatch(createArticleSuccess());
                 dispatch(openSnackbar());
                 dispatch(disableEdit());
             }).catch(error => {
             dispatch(createArticleFail(error));
         });
-
     }
 }
 

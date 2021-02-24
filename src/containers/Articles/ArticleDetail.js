@@ -82,6 +82,10 @@ class ArticleDetail extends Component {
         this.props.onFetchArticle(this.props.articleForm.articleId);
     }
 
+    componentDidMount() {
+        console.log('article detail component did mount')
+    }
+
     createArticleHandler = () => {
         const formData = {};
         for (let formIdentifier in this.props.articleForm) {
@@ -210,7 +214,8 @@ const mapStateToProps = state => {
         loading: state.article.loading,
         formIsValid: state.article.formIsValid,
         token: state.auth.token,
-        userId: state.auth.userId
+        userId: state.auth.userId,
+        redirectPath: state.auth.authRedirectPath
     }
 };
 
