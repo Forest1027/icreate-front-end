@@ -12,8 +12,6 @@ import SearchAddGrid from "../../components/UI/Search/SearchAddGrid";
 import ArticleItems from "../../components/Article/ArticleItem/ArticleItems";
 import Pagination from '../../components/UI/Pagination/Pagination';
 import * as actions from "../../store/actions";
-import withErrorHandler from "../../hoc/withErrorHandler";
-import axios from "../../axios-url";
 import Aux from '../../hoc/Auxiliary';
 
 const styles = () => ({
@@ -106,4 +104,4 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, {withTheme: true})(withErrorHandler(ArticleScreen, axios)));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, {withTheme: true})(ArticleScreen));

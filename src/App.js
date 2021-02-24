@@ -10,6 +10,8 @@ import Signup from './containers/Auth/Signup';
 import Login from './containers/Auth/Login';
 import Logout from "./containers/Auth/Logout";
 import * as actions from './store/actions/index';
+import axios from './axios-url';
+import withErrorHandler from "./hoc/withErrorHandler";
 
 
 class App extends Component {
@@ -62,4 +64,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(App,axios)));
