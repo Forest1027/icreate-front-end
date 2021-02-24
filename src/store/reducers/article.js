@@ -20,7 +20,7 @@ const initialState = {
     readOnly: false,
     editor: null,
     loading: false,
-    formIsValid: false
+    formIsValid: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -113,7 +113,9 @@ const reducer = (state = initialState, action) => {
                 loading: false
             }
         case actionTypes.FETCH_ARTICLES_FAIL:
-            return {...state};
+            return {...state,
+                loading: false,
+            };
         case actionTypes.SET_ARTICLE_ID:
             return {
                 ...state,

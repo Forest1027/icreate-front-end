@@ -13,7 +13,8 @@ import * as actions from '../../store/actions/index';
 import Aux from '../../hoc/Auxiliary';
 import Progress from "../../components/UI/Progress/Progress";
 import {checkValidity} from "../../shared/utility";
-
+import withErrorHandler from "../../hoc/withErrorHandler";
+import axios from "./../../axios-url";
 
 const styles = theme => ({
     root: {
@@ -228,4 +229,4 @@ const mapDispatchToProps = dispatch => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, {withTheme: true})(ArticleDetail));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, {withTheme: true})(withErrorHandler(ArticleDetail, axios)));

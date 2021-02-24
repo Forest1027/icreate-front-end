@@ -58,6 +58,7 @@ export const createArticle = (articleData, token) => {
             .then(response => {
                 articleData['articleId'] = response.data.name;
                 dispatch(createArticleSuccess());
+                dispatch(openSnackbar());
                 dispatch(disableEdit());
             }).catch(error => {
             dispatch(createArticleFail(error));
