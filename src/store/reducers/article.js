@@ -78,6 +78,7 @@ const disableEdit = (state, action) => {
 }
 
 const initEditor = (state, action) => {
+    console.log('init editor')
     return updateObject(state, {
         editor: action.editor
     })

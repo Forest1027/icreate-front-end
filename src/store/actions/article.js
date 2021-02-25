@@ -227,6 +227,7 @@ export const deleteArticle = (articleId) => {
         axios.delete(`/articles/${articleId}.json`).then(
             () => {
                 dispatch(deleteArticleSuccess(articleId));
+                dispatch(fetchArticles(localStorage.token, localStorage.userId))
                 dispatch(closeDialog());
             }
         ).catch(err => {
