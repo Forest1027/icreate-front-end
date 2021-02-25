@@ -17,8 +17,6 @@ const initialState = {
     },
     searchStr: '',
     currentPage: 1,
-    readOnly: false,
-    editor: null,
     loading: false,
     formIsValid: false,
 }
@@ -56,31 +54,6 @@ const clearArticle = (state, action) => {
             description: '',
             content: ''
         }
-    })
-}
-
-const enableEdit = (state, action) => {
-    if (state.editor !== null) {
-        state.editor.isReadOnly = false
-    }
-    return updateObject(state, {
-        readOnly: false
-    })
-}
-
-const disableEdit = (state, action) => {
-    console.log('disable edit')
-    state.editor.isReadOnly = true
-    console.log(state.editor.isReadOnly)
-    return updateObject(state, {
-        readOnly: true
-    })
-}
-
-const initEditor = (state, action) => {
-    console.log('init editor')
-    return updateObject(state, {
-        editor: action.editor
     })
 }
 
@@ -184,12 +157,7 @@ const reducer = (state = initialState, action) => {
             return paginationDisplayArticles(state, action);
         case actionTypes.CLEAR_ARTICLE:
             return clearArticle(state, action);
-        case actionTypes.ENABLE_EDIT:
-            return enableEdit(state, action);
-        case actionTypes.DISABLE_EDIT:
-            return disableEdit(state, action);
-        case actionTypes.INIT_EDITOR:
-            return initEditor(state, action);
+
         case actionTypes.CHANGE_ARTICLE_CONTENT:
             return changeArticleContent(state, action);
         case actionTypes.CREATE_ARTICLE_START:

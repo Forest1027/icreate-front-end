@@ -216,7 +216,7 @@ class ArticleDetail extends Component {
 const mapStateToProps = state => {
     return {
         articleForm: state.article.articleForm,
-        readOnly: state.article.readOnly,
+        readOnly: state.ui.readOnly,
         open: state.ui.snackbar.open,
         horizontal: state.ui.snackbar.horizontal,
         vertical: state.ui.snackbar.vertical,
@@ -225,7 +225,7 @@ const mapStateToProps = state => {
         token: state.auth.token,
         userId: state.auth.userId,
         redirectPath: state.auth.authRedirectPath,
-        editor: state.article.editor
+        editor: state.ui.editor
     }
 };
 

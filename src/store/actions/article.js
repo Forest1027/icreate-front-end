@@ -1,27 +1,8 @@
 import * as actionTypes from './actionTypes';
-import {openSnackbar, closeDialog, closeSnackbar} from "./uiComponents";
+import {openSnackbar, closeDialog, closeSnackbar, enableEdit, disableEdit} from "./uiComponents";
 
 import axios from "./../../axios-url";
 import {isNotNull} from "../../shared/utility";
-
-export const enableEdit = () => {
-    return {
-        type: actionTypes.ENABLE_EDIT
-    }
-}
-
-export const disableEdit = () => {
-    return {
-        type: actionTypes.DISABLE_EDIT
-    }
-}
-
-export const initEditor = (editor) => {
-    return {
-        type: actionTypes.INIT_EDITOR,
-        editor: editor
-    };
-};
 
 export const changeArticleContent = (name, value) => {
     return {
