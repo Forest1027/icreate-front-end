@@ -4,13 +4,34 @@ import {connect} from 'react-redux';
 import './App.css';
 import Introduction from "./components/Introduction/Introduction";
 import Layout from "./containers/Layout/Layout";
+import * as actions from './store/actions/index';
+import axios from './axios-url';
+import withErrorHandler from "./hoc/withErrorHandler";
+import Login from "./containers/Auth/Login";
+import Logout from "./containers/Auth/Logout";
+import Signup from "./containers/Auth/Signup";
 import ArticleScreen from "./containers/Articles/ArticleScreen";
 import ArticleDetail from "./containers/Articles/ArticleDetail";
-import Signup from './containers/Auth/Signup';
-import Login from './containers/Auth/Login';
-import Logout from "./containers/Auth/Logout";
-import * as actions from './store/actions/index';
 
+// const Login = React.lazy(() => {
+//     import ('./containers/Auth/Login');
+// });
+//
+// const Signup = React.lazy(() => {
+//     import('./containers/Auth/Signup');
+// });
+//
+// const ArticleScreen = React.lazy(() => {
+//     import("./containers/Articles/ArticleScreen");
+// })
+//
+// const ArticleDetail = React.lazy(() => {
+//     import("./containers/Articles/ArticleDetail");
+// })
+//
+// const Logout = React.lazy(() => {
+//     import("./containers/Auth/Logout");
+// })
 
 class App extends Component {
 
@@ -62,4 +83,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(App, axios)));

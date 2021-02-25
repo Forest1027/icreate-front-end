@@ -1,5 +1,24 @@
 import * as actionTypes from './actionTypes';
 
+export const enableEdit = () => {
+    return {
+        type: actionTypes.ENABLE_EDIT
+    }
+}
+
+export const disableEdit = () => {
+    return {
+        type: actionTypes.DISABLE_EDIT
+    }
+}
+
+export const initEditor = (editor) => {
+    return {
+        type: actionTypes.INIT_EDITOR,
+        editor: editor
+    };
+};
+
 export const openSnackbar = () => {
     return {
         type: actionTypes.OPEN_SNACKBAR

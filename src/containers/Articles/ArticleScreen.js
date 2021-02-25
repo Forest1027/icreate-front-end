@@ -12,6 +12,7 @@ import SearchAddGrid from "../../components/UI/Search/SearchAddGrid";
 import ArticleItems from "../../components/Article/ArticleItem/ArticleItems";
 import Pagination from '../../components/UI/Pagination/Pagination';
 import * as actions from "../../store/actions";
+import Aux from '../../hoc/Auxiliary';
 
 const styles = () => ({
     button: {
@@ -31,14 +32,23 @@ class ArticleScreen extends Component {
         const searchStr = event.target.value;
         this.props.onSearchInputChange(searchStr);
         setTimeout(() => {
-            if(searchStr === this.props.search) {
+            if (searchStr === this.props.search) {
                 this.props.onChangePage(this.props.currentPage);
             }
-        },500);
+        }, 500);
     }
 
     render() {
         const {classes} = this.props;
+        let articles = <Progress loading={this.props.loading}/>
+        if(!this.props.loading) {
+            articles = (
+                <Aux>
+                    <ArticleItems articles={this.props.displayArticles}/>
+                    <Pagination count={this.props.count} changed={(pageNum) => this.props.onChangePage(pageNum)}/>
+                </Aux>
+            )
+        }
         return (
             <Box>
                 <Box display="flex">
@@ -46,9 +56,7 @@ class ArticleScreen extends Component {
                         <SearchAddGrid changed={this.searchInputChangeHandler}/>
                     </Box>
                 </Box>
-                <Progress loading={this.props.loading}/>
-                <ArticleItems articles={this.props.displayArticles}/>
-                <Pagination count={this.props.count} changed={(pageNum) => this.props.onChangePage(pageNum)}/>
+                {articles}
                 <Dialog
                     open={this.props.open}
                     onClose={this.props.onCloseDialog}
@@ -82,7 +90,7 @@ const mapStateToProps = state => {
         token: state.auth.token,
         userId: state.auth.userId,
         search: state.article.searchStr,
-        currentPage: state.article.currentPage
+        currentPage: state.article.currentPage,
     }
 };
 
@@ -92,7 +100,7 @@ const mapDispatchToProps = dispatch => {
         onCloseDialog: () => dispatch(actions.closeDialog()),
         onDeleteArticle: (id) => dispatch(actions.deleteArticle(id)),
         onChangePage: (pageNum) => dispatch(actions.paginationDisplayArticles(pageNum)),
-        onSearchInputChange: (searchStr) => dispatch(actions.setSearchInput(searchStr))
+        onSearchInputChange: (searchStr) => dispatch(actions.setSearchInput(searchStr)),
     }
 };
 

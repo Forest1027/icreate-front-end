@@ -1,27 +1,8 @@
 import * as actionTypes from './actionTypes';
-import {openSnackbar, closeDialog, closeSnackbar} from "./uiComponents";
+import {openSnackbar, closeDialog, closeSnackbar, enableEdit, disableEdit} from "./uiComponents";
 
 import axios from "./../../axios-url";
 import {isNotNull} from "../../shared/utility";
-
-export const enableEdit = () => {
-    return {
-        type: actionTypes.ENABLE_EDIT
-    }
-}
-
-export const disableEdit = () => {
-    return {
-        type: actionTypes.DISABLE_EDIT
-    }
-}
-
-export const initEditor = (editor) => {
-    return {
-        type: actionTypes.INIT_EDITOR,
-        editor: editor
-    };
-};
 
 export const changeArticleContent = (name, value) => {
     return {
@@ -55,14 +36,13 @@ export const createArticle = (articleData, token) => {
         dispatch(closeSnackbar());
         dispatch(createArticleStart());
         axios.post('/articles.json?auth=' + token, articleData)
-            .then(response => {
-                articleData['articleId'] = response.data.name;
+            .then(() => {
                 dispatch(createArticleSuccess());
+                dispatch(openSnackbar());
                 dispatch(disableEdit());
             }).catch(error => {
             dispatch(createArticleFail(error));
         });
-
     }
 }
 
@@ -228,6 +208,7 @@ export const deleteArticle = (articleId) => {
         axios.delete(`/articles/${articleId}.json`).then(
             () => {
                 dispatch(deleteArticleSuccess(articleId));
+                dispatch(fetchArticles(localStorage.token, localStorage.userId))
                 dispatch(closeDialog());
             }
         ).catch(err => {

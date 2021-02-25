@@ -2,9 +2,6 @@ export {
     createArticle,
     fetchArticles,
     changeArticleContent,
-    initEditor,
-    enableEdit,
-    disableEdit,
     fetchArticle,
     goToCreateArticle,
     updateArticle,
@@ -17,7 +14,10 @@ export {
 export {
     closeSnackbar,
     openDialog,
-    closeDialog
+    closeDialog,
+    enableEdit,
+    disableEdit,
+    initEditor
 } from './uiComponents';
 
 export {
