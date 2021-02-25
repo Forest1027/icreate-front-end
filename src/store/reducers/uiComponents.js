@@ -38,6 +38,39 @@ const initEditor = (state, action) => {
     })
 }
 
+const openSnackBar = (state, action) => {
+    const snackbarConfig = state.snackbar;
+    snackbarConfig.open = true;
+    return updateObject(state, {
+        snackbar: snackbarConfig
+    });
+}
+
+const closeSnackBar = (state, action) => {
+    const snackbarCfg = state.snackbar;
+    snackbarCfg.open = false;
+    return updateObject(state, {
+        snackbar: snackbarCfg
+    });
+}
+
+const openDialogReducer = (state, action) => {
+    const dialogConfig = state.dialog;
+    dialogConfig.open = true;
+    dialogConfig.articleId = action.articleId
+    return updateObject(state, {
+        dialog: dialogConfig
+    });
+}
+
+const closeDialogReducer = (state, action) => {
+    const dialogCfg = state.dialog;
+    dialogCfg.open = false;
+    return updateObject(state, {
+        dialog: dialogCfg
+    });
+}
+
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.ENABLE_EDIT:
@@ -47,34 +80,13 @@ const reducer = (state = initialState, action) => {
         case actionTypes.INIT_EDITOR:
             return initEditor(state, action);
         case actionTypes.OPEN_SNACKBAR:
-            const snackbarConfig = state.snackbar;
-            snackbarConfig.open = true;
-            return {
-                ...state,
-                snackbar: snackbarConfig
-            };
+            return openSnackBar(state, action);
         case actionTypes.CLOSE_SNACKBAR:
-            const snackbarCfg = state.snackbar;
-            snackbarCfg.open = false;
-            return {
-                ...state,
-                snackbar: snackbarCfg
-            };
+            return closeSnackBar(state, action);
         case actionTypes.OPEN_DIALOG:
-            const dialogConfig = state.dialog;
-            dialogConfig.open = true;
-            dialogConfig.articleId = action.articleId
-            return {
-                ...state,
-                dialog: dialogConfig
-            };
+            return openDialogReducer(state, action);
         case actionTypes.CLOSE_DIALOG:
-            const dialogCfg = state.dialog;
-            dialogCfg.open = false;
-            return {
-                ...state,
-                dialog: dialogCfg
-            };
+            return closeDialogReducer(state, action);
         default:
             return state;
     }
